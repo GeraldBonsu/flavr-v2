@@ -1,0 +1,186 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import FeedbackModal from '@/components/app/FeedbackModal'
+import { ToastProvider, useToast } from '@/components/app/Toast'
+import { trackEvent } from '@/lib/analytics/client'
+import type { Database } from '@/types/database.types'
+
+type Recipe = Database['public']['Tables']['recipes']['Row']
+type Feedback = { id: string; rating: number | null; cooked: boolean | null } | null
+
+interface Ingredient { item: string; amount: string; extra: boolean }
+
+function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFeedback: Feedback }) {
+  const router = useRouter()
+  const { showToast } = useToast()
+
+  const [feedback, setFeedback] = useState<Feedback>(existingFeedback)
+  const [modalMode, setModalMode] = useState<'rating' | 'cooked' | null>(null)
+  const thirtySecRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    void trackEvent('recipe_saved', { recipe_id: recipe.id })
+
+    // Show thumbs after 30s if not yet rated
+    if (!existingFeedback?.rating) {
+      thirtySecRef.current = setTimeout(() => {
+        setModalMode('rating')
+      }, 30_000)
+    }
+    return () => {
+      if (thirtySecRef.current) clearTimeout(thirtySecRef.current)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const ingredients = (recipe.ingredients as unknown as Ingredient[]) ?? []
+  const steps = recipe.steps ?? []
+
+  return (
+    <div className="screen" style={{ background: 'var(--bg)' }}>
+      {/* Hero */}
+      <div style={{ background: '#2D1A0E', padding: '14px 18px 16px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <button onClick={() => router.back()} style={{ background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: 20, padding: '4px 12px', fontSize: 9, color: 'rgba(255,255,255,0.7)', fontFamily: 'Epilogue, sans-serif', cursor: 'pointer' }}>
+            ← Back
+          </button>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>Recipe</span>
+          <div style={{ width: 52 }} />
+        </div>
+        <div style={{ fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)', marginBottom: 5 }}>
+          {recipe.cuisine} · {recipe.goal}
+        </div>
+        <div className="serif" style={{ fontSize: 20, fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: 10 }}>
+          {recipe.emoji} {recipe.name}
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {[`⏱ ${recipe.cook_time ?? ''}`, `👤 ${recipe.servings ?? ''} servings`, '🔥 Easy'].map(chip => (
+            <span key={chip} style={{ fontSize: 8, color: 'rgba(255,255,255,0.55)', background: 'rgba(255,255,255,0.1)', padding: '3px 9px', borderRadius: 20 }}>
+              {chip}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Macros */}
+      <div className="macro-strip">
+        {[
+          { val: recipe.calories?.toString() ?? '—', lbl: 'kcal', cal: true },
+          { val: recipe.protein ?? '—', lbl: 'protein', cal: false },
+          { val: recipe.carbs ?? '—', lbl: 'carbs', cal: false },
+          { val: recipe.fats ?? '—', lbl: 'fats', cal: false },
+        ].map(m => (
+          <div key={m.lbl} className="macro-cell">
+            <div className={`macro-num ${m.cal ? 'cal' : ''}`}>{m.val}</div>
+            <div className="macro-lbl">{m.lbl}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Body */}
+      <div className="content-scroll" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div>
+          <div className="sec-title">Ingredients</div>
+          {ingredients.map((ing, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '0.5px solid rgba(0,0,0,0.05)' }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: 'var(--text)', flex: 1 }}>{ing.item}</span>
+              <span style={{ fontSize: 9, color: 'var(--muted)', fontWeight: 500 }}>{ing.amount}</span>
+              {ing.extra && <span style={{ fontSize: 8, color: 'var(--muted-light)', fontStyle: 'italic' }}>suggested</span>}
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <div className="sec-title">Method</div>
+          {steps.map((step, i) => (
+            <div key={i} style={{ display: 'flex', gap: 10, padding: '6px 0', borderBottom: '0.5px solid rgba(0,0,0,0.05)' }}>
+              <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'var(--green)', color: '#fff', fontSize: 8, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                {i + 1}
+              </div>
+              <span style={{ fontSize: 10, color: 'var(--text)', lineHeight: 1.6, flex: 1 }}>{step}</span>
+            </div>
+          ))}
+        </div>
+
+        {recipe.goal_note && (
+          <div style={{ background: 'var(--tag-bg)', borderRadius: 10, padding: '10px 12px' }}>
+            <div style={{ fontSize: 8, fontWeight: 600, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>
+              For your {recipe.goal} goal
+            </div>
+            <div style={{ fontSize: 10, color: 'var(--text)', lineHeight: 1.6 }}>{recipe.goal_note}</div>
+          </div>
+        )}
+
+        {/* Feedback thumbs (shown after 30s or if already present) */}
+        {feedback?.rating && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: '#fff', borderRadius: 10, border: '0.5px solid rgba(0,0,0,0.08)' }}>
+            <span style={{ fontSize: 20 }}>{feedback.rating === 2 ? '👍' : '👎'}</span>
+            <span style={{ fontSize: 10, color: 'var(--muted)' }}>You rated this recipe</span>
+          </div>
+        )}
+        {!feedback?.rating && (
+          <div style={{ display: 'flex', gap: 8 }}>
+            {[{ val: 2 as const, label: '👍 Loved it' }, { val: 1 as const, label: '👎 Not for me' }].map(b => (
+              <button key={b.val} onClick={() => setModalMode('rating')} style={{
+                flex: 1, padding: '10px', borderRadius: 10,
+                border: '0.5px solid rgba(0,0,0,0.1)', background: '#fff',
+                fontSize: 10, cursor: 'pointer', fontFamily: 'Epilogue, sans-serif', color: 'var(--muted)',
+              }}>
+                {b.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: 'flex', gap: 8, padding: '10px 16px 20px', borderTop: '0.5px solid var(--border)', flexShrink: 0 }}>
+        <Link href="/home" onClick={() => showToast('Starting new recipe…')} style={{
+          flex: 1, padding: '10px 6px', borderRadius: 9, fontSize: 10, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif', background: 'var(--accent)', color: '#fff',
+          border: 'none', cursor: 'pointer', textAlign: 'center', textDecoration: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          New recipe →
+        </Link>
+        <Link href="/saved" style={{
+          flex: 1, padding: '10px 6px', borderRadius: 9, fontSize: 10, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif', background: '#fff', color: 'var(--text)',
+          border: '0.5px solid rgba(0,0,0,0.12)', cursor: 'pointer', textAlign: 'center', textDecoration: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          Saved recipes
+        </Link>
+      </div>
+
+      {modalMode && (
+        <FeedbackModal
+          recipeId={recipe.id}
+          mode={modalMode}
+          onClose={() => {
+            setModalMode(null)
+            // Refresh feedback state after submission
+            setFeedback(prev => ({
+              ...prev,
+              id: prev?.id ?? '',
+              rating: modalMode === 'rating' ? (feedback?.rating ?? null) : (prev?.rating ?? null),
+              cooked: modalMode === 'cooked' ? true : (prev?.cooked ?? null),
+            }))
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+export default function RecipeClient({ recipe, existingFeedback }: { recipe: Recipe; existingFeedback: Feedback }) {
+  return (
+    <ToastProvider>
+      <RecipeInner recipe={recipe} existingFeedback={existingFeedback} />
+    </ToastProvider>
+  )
+}
