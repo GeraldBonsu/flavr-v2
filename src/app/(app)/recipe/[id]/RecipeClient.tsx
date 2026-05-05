@@ -138,22 +138,21 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
       </div>
 
       {/* Actions */}
-      <div style={{ display: 'flex', gap: 8, padding: '10px 16px 20px', borderTop: '0.5px solid var(--border)', flexShrink: 0 }}>
-        <Link href="/home" onClick={() => showToast('Starting new recipe…')} style={{
-          flex: 1, padding: '10px 6px', borderRadius: 9, fontSize: 10, fontWeight: 500,
-          fontFamily: 'Epilogue, sans-serif', background: 'var(--accent)', color: '#fff',
-          border: 'none', cursor: 'pointer', textAlign: 'center', textDecoration: 'none',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+      <div style={{ padding: '10px 16px 20px', borderTop: '0.5px solid var(--border)', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Link href={`/recipe/${recipe.id}/cook`} style={{
+          display: 'block', width: '100%', padding: '14px',
+          background: 'var(--text)', color: '#fff',
+          borderRadius: 'var(--r-pill)', fontSize: 14, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif', textAlign: 'center', textDecoration: 'none',
         }}>
-          New recipe →
+          Start cooking →
         </Link>
-        <Link href="/saved" style={{
-          flex: 1, padding: '10px 6px', borderRadius: 9, fontSize: 10, fontWeight: 500,
-          fontFamily: 'Epilogue, sans-serif', background: '#fff', color: 'var(--text)',
-          border: '0.5px solid rgba(0,0,0,0.12)', cursor: 'pointer', textAlign: 'center', textDecoration: 'none',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        <Link href="/home" onClick={() => showToast('Starting new recipe…')} style={{
+          display: 'block', textAlign: 'center', fontSize: 12,
+          color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
+          textDecoration: 'none', padding: '4px 0',
         }}>
-          Saved recipes
+          Generate a new recipe
         </Link>
       </div>
 

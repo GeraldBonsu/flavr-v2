@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
   const router = useRouter()
+
   const [name, setName]         = useState('')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
@@ -17,23 +18,14 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
-
+    setLoading(true); setError(null)
     const supabase = createClient()
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
+      email, password,
       options: { data: { full_name: name.trim() } },
     })
-
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      router.push('/onboarding')
-      router.refresh()
-    }
+    if (error) { setError(error.message); setLoading(false) }
+    else { router.push('/onboarding'); router.refresh() }
   }
 
   const handleGoogle = async () => {
@@ -44,101 +36,134 @@ export default function SignupPage() {
     })
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '13px 16px',
+    borderRadius: 'var(--r-pill)',
+    border: '0.5px solid rgba(255,255,255,0.15)',
+    background: 'rgba(255,255,255,0.08)',
+    color: '#fff', fontSize: 13,
+    fontFamily: 'Epilogue, sans-serif', outline: 'none',
+  }
+
   return (
-    <div className="screen" style={{ background: '#1A3A0A' }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '40px 22px 28px' }}>
-        <div className="logo" style={{ color: '#B84A1E', marginBottom: 32 }}>
-          flavr<span style={{ color: '#6BCB8B' }}>.</span>
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      background: 'var(--green-dark)', minHeight: '100vh',
+      padding: '28px var(--gutter)',
+    }}>
+
+      {/* Logo */}
+      <Link href="/" style={{ textDecoration: 'none', marginBottom: 36, display: 'block' }}>
+        <span style={{
+          fontFamily: 'Fraunces, serif', fontStyle: 'italic',
+          fontWeight: 600, fontSize: 22,
+          color: 'var(--accent)', letterSpacing: '-0.02em',
+        }}>
+          flavr.
+        </span>
+      </Link>
+
+      {/* Heading */}
+      <h1 style={{
+        fontFamily: 'Fraunces, serif', fontStyle: 'italic',
+        fontWeight: 500, fontSize: 28,
+        color: '#fff', letterSpacing: '-0.02em',
+        lineHeight: 1.1, marginBottom: 6,
+      }}>
+        Create your account.
+      </h1>
+      <p style={{
+        fontSize: 12.5, color: 'rgba(255,255,255,0.5)',
+        marginBottom: 28, fontFamily: 'Epilogue, sans-serif',
+      }}>
+        Start cooking smarter
+      </p>
+
+      {/* Error */}
+      {error && (
+        <div style={{
+          background: 'rgba(184,74,30,0.18)',
+          border: '0.5px solid rgba(184,74,30,0.4)',
+          borderRadius: 10, padding: '10px 14px', marginBottom: 16,
+          fontSize: 12.5, color: 'var(--accent-soft)',
+          fontFamily: 'Epilogue, sans-serif',
+        }}>
+          {error}
         </div>
+      )}
 
-        <div className="serif" style={{ fontSize: 26, fontWeight: 400, color: '#fff', marginBottom: 6, lineHeight: 1.2 }}>
-          Create your account
-        </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 32 }}>
-          Start cooking smarter
-        </div>
-
-        {error && (
-          <div style={{
-            background: 'rgba(184,74,30,0.2)', border: '0.5px solid rgba(184,74,30,0.4)',
-            borderRadius: 10, padding: '10px 14px', marginBottom: 16,
-            fontSize: 12, color: '#E8967A',
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <input
-            type="text" required value={name} onChange={e => setName(e.target.value)}
-            placeholder="Your name"
-            style={{
-              padding: '13px 14px', borderRadius: 10,
-              border: '0.5px solid rgba(255,255,255,0.15)',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff', fontSize: 13, fontFamily: 'Epilogue, sans-serif', outline: 'none',
-            }}
-          />
-          <input
-            type="email" required value={email} onChange={e => setEmail(e.target.value)}
-            placeholder="Email address"
-            style={{
-              padding: '13px 14px', borderRadius: 10,
-              border: '0.5px solid rgba(255,255,255,0.15)',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff', fontSize: 13, fontFamily: 'Epilogue, sans-serif', outline: 'none',
-            }}
-          />
-          <input
-            type="password" required minLength={6} value={password} onChange={e => setPassword(e.target.value)}
-            placeholder="Password (min 6 characters)"
-            style={{
-              padding: '13px 14px', borderRadius: 10,
-              border: '0.5px solid rgba(255,255,255,0.15)',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff', fontSize: 13, fontFamily: 'Epilogue, sans-serif', outline: 'none',
-            }}
-          />
-          <button
-            type="submit" disabled={loading}
-            style={{
-              padding: '13px', marginTop: 4,
-              background: '#E5622A', color: '#fff', border: 'none', borderRadius: 12,
-              fontSize: 12, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1,
-            }}
-          >
-            {loading ? 'Creating account…' : 'Get started →'}
-          </button>
-        </form>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '20px 0' }}>
-          <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>OR</span>
-          <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
-        </div>
-
+      {/* Form */}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <input
+          type="text" required
+          value={name} onChange={e => setName(e.target.value)}
+          placeholder="Your name"
+          style={inputStyle}
+        />
+        <input
+          type="email" required
+          value={email} onChange={e => setEmail(e.target.value)}
+          placeholder="Email address"
+          style={inputStyle}
+        />
+        <input
+          type="password" required minLength={6}
+          value={password} onChange={e => setPassword(e.target.value)}
+          placeholder="Password (min 6 characters)"
+          style={inputStyle}
+        />
         <button
-          onClick={handleGoogle}
+          type="submit" disabled={loading}
           style={{
-            padding: '12px 14px', borderRadius: 12,
-            border: '0.5px solid rgba(255,255,255,0.2)',
-            background: 'rgba(255,255,255,0.08)', color: '#fff',
-            fontSize: 12, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            marginTop: 6, padding: '14px',
+            background: loading ? 'rgba(184,74,30,0.35)' : 'var(--accent)',
+            color: '#fff', border: 'none',
+            borderRadius: 'var(--r-pill)',
+            fontSize: 14, fontWeight: 500,
+            fontFamily: 'Epilogue, sans-serif',
+            cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          <GoogleIcon />
-          Continue with Google
+          {loading ? 'Creating account…' : 'Get started →'}
         </button>
+      </form>
 
-        <div style={{ marginTop: 'auto', paddingTop: 24, textAlign: 'center' }}>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
-            Already have an account?{' '}
-            <Link href="/login" style={{ color: '#E5622A', textDecoration: 'none' }}>Sign in</Link>
-          </span>
-        </div>
+      {/* Divider */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '20px 0' }}>
+        <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', fontFamily: 'Epilogue, sans-serif' }}>OR</span>
+        <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
       </div>
+
+      {/* Google */}
+      <button
+        onClick={handleGoogle}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          padding: '13px 16px',
+          border: '0.5px solid rgba(255,255,255,0.2)',
+          borderRadius: 'var(--r-pill)',
+          background: 'rgba(255,255,255,0.07)', color: '#fff',
+          fontSize: 13, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
+        }}
+      >
+        <GoogleIcon />
+        Continue with Google
+      </button>
+
+      {/* Footer */}
+      <p style={{
+        marginTop: 'auto', paddingTop: 28,
+        textAlign: 'center', fontSize: 11,
+        color: 'rgba(255,255,255,0.4)',
+        fontFamily: 'Epilogue, sans-serif',
+      }}>
+        Already have an account?{' '}
+        <Link href="/login" style={{ color: 'var(--accent-soft)', textDecoration: 'underline' }}>
+          Sign in
+        </Link>
+      </p>
     </div>
   )
 }

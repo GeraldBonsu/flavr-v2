@@ -2,70 +2,131 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-const features = [
-  { icon: '🥗', title: 'Smart recipes', sub: 'From your fridge' },
-  { icon: '📊', title: 'Nutrition AI',  sub: 'Accurate macros' },
-  { icon: '🌍', title: 'World cuisine', sub: '200+ cultures' },
-]
-
 export default async function LandingPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (user) redirect('/home')
 
   return (
-    <div className="screen" style={{ background: '#1A3A0A' }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px 22px 28px' }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)', marginBottom: 10, fontFamily: 'Epilogue, sans-serif' }}>
-          Welcome to
-        </div>
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      background: 'var(--green-dark)', minHeight: '100vh',
+      padding: '18px var(--gutter) 28px',
+    }}>
 
-        <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 300, fontStyle: 'italic', fontSize: 40, lineHeight: 1.1, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em' }}>
-          Your AI<br />kitchen<br />companion
-        </div>
+      {/* Brand row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{
+          fontFamily: 'Fraunces, serif', fontStyle: 'italic',
+          fontWeight: 600, fontSize: 22, color: 'var(--accent)',
+          letterSpacing: '-0.02em', lineHeight: 1,
+        }}>
+          flavr.
+        </span>
+        <span style={{
+          fontSize: 10, color: 'rgba(255,255,255,0.55)',
+          fontFamily: 'Epilogue, sans-serif',
+        }}>
+          v2
+        </span>
+      </div>
 
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.48)', lineHeight: 1.6, marginBottom: 'auto', paddingBottom: 20 }}>
-          Recipes from what you have.<br />Nutrition that fits your goals.
-        </div>
+      {/* Hero — flex-grow, vertically centred */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 20 }}>
+        <p style={{
+          fontSize: 9.5, fontWeight: 500,
+          letterSpacing: '0.1em', textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.6)',
+          fontFamily: 'Epilogue, sans-serif', marginBottom: 14,
+        }}>
+          Cook with what you have
+        </p>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-          {features.map(f => (
-            <div key={f.title} style={{
-              flex: 1, background: 'rgba(255,255,255,0.07)',
-              border: '0.5px solid rgba(255,255,255,0.12)',
-              borderRadius: 12, padding: '10px 8px',
-            }}>
-              <div style={{ fontSize: 18, marginBottom: 5 }}>{f.icon}</div>
-              <div style={{ fontSize: 9, fontWeight: 600, color: '#fff', marginBottom: 2 }}>{f.title}</div>
-              <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.38)' }}>{f.sub}</div>
-            </div>
-          ))}
-        </div>
+        <h1 style={{
+          fontFamily: 'Fraunces, serif', fontStyle: 'italic',
+          fontWeight: 500, fontSize: 42,
+          lineHeight: 0.98, letterSpacing: '-0.02em',
+          color: '#fff', marginBottom: 18,
+        }}>
+          {"What's in "}
+          <span style={{ color: 'var(--accent-soft)' }}>your</span>
+          <br />
+          <span style={{
+            textDecoration: 'underline wavy rgba(232,150,116,0.35)',
+            textUnderlineOffset: '8px',
+          }}>
+            kitchen?
+          </span>
+        </h1>
 
-        <Link
-          href="/signup"
-          style={{
-            display: 'block', width: '100%', padding: '14px', textAlign: 'center',
-            background: '#E5622A', color: '#fff', borderRadius: 12,
-            fontSize: 12, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-            letterSpacing: '0.04em', textDecoration: 'none',
-          }}
-        >
-          Get started →
-        </Link>
+        <p style={{
+          fontSize: 12.5, color: 'rgba(255,255,255,0.75)',
+          lineHeight: 1.55, maxWidth: 280,
+          fontFamily: 'Epilogue, sans-serif',
+        }}>
+          A recipe for whatever&apos;s in the fridge — tuned to your goals, your taste, your time.
+        </p>
+      </div>
 
+      {/* Preview card */}
+      <div style={{
+        background: 'rgba(255,255,255,0.05)',
+        border: '0.5px solid rgba(255,255,255,0.10)',
+        borderRadius: 'var(--r-option)', padding: '12px 14px',
+        marginBottom: 16,
+      }}>
+        <p style={{
+          fontSize: 9.5, fontWeight: 500,
+          letterSpacing: '0.088em', textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.55)',
+          fontFamily: 'Epilogue, sans-serif', marginBottom: 6,
+        }}>
+          Tonight, from 6 ingredients
+        </p>
+        <p style={{
+          fontFamily: 'Fraunces, serif', fontStyle: 'italic',
+          fontSize: 15, color: '#fff', marginBottom: 5,
+        }}>
+          Charred halloumi &amp; chickpea bowl
+        </p>
+        <p style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 10.5, color: 'rgba(255,255,255,0.7)',
+        }}>
+          520 cal · 32g protein · 18 min
+        </p>
+      </div>
+
+      {/* Primary CTA */}
+      <Link
+        href="/signup"
+        style={{
+          display: 'block', textAlign: 'center',
+          padding: '15px', marginBottom: 14,
+          background: 'var(--accent)', color: '#fff',
+          borderRadius: 'var(--r-pill)',
+          fontSize: 14, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif',
+          letterSpacing: '0.01em', textDecoration: 'none',
+        }}
+      >
+        Get started →
+      </Link>
+
+      {/* Sign-in link */}
+      <p style={{
+        textAlign: 'center', fontSize: 10.5,
+        color: 'rgba(255,255,255,0.55)',
+        fontFamily: 'Epilogue, sans-serif',
+      }}>
+        Already have an account?{' '}
         <Link
           href="/login"
-          style={{
-            display: 'block', textAlign: 'center',
-            fontSize: 9, color: 'rgba(255,255,255,0.35)',
-            marginTop: 12, textDecoration: 'none',
-            fontFamily: 'Epilogue, sans-serif',
-          }}
+          style={{ color: 'var(--accent-soft)', textDecoration: 'underline' }}
         >
-          Already have an account? <span style={{ color: '#E5622A' }}>Sign in</span>
+          Sign in
         </Link>
-      </div>
+      </p>
     </div>
   )
 }

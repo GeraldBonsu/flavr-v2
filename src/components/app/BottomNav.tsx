@@ -9,8 +9,8 @@ const NAV_ITEMS = [
     label: 'Cook',
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
-        <path d="M3 9.5C3 5.36 6.13 2 10 2s7 3.36 7 7.5V18H3V9.5z"/>
-        <path d="M10 2v3M6 18v-2M14 18v-2"/>
+        <path d="M10 2C7 2 4.5 4 4.5 6.5c0 1.5.7 2.8 1.8 3.7L5 18h10l-1.3-7.8c1.1-.9 1.8-2.2 1.8-3.7C15.5 4 13 2 10 2z"/>
+        <path d="M10 2v3M7.5 3.5L9 5.5M12.5 3.5L11 5.5"/>
       </svg>
     ),
   },
@@ -42,18 +42,33 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    href: '/account',
+    label: 'Me',
+    icon: (
+      <svg className="nav-svg" viewBox="0 0 20 20">
+        <circle cx="10" cy="6" r="3.5"/>
+        <path d="M3 18c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+      </svg>
+    ),
+  },
 ]
 
 export default function BottomNav() {
   const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === '/home') return pathname === '/home' || pathname === '/'
+    return pathname.startsWith(href)
+  }
+
   return (
     <nav className="bottom-nav">
       {NAV_ITEMS.map(item => (
         <Link
           key={item.href}
           href={item.href}
-          className={`nav-item ${pathname === item.href ? 'active' : ''}`}
-          style={{ textDecoration: 'none' }}
+          className={`nav-item ${isActive(item.href) ? 'active' : ''}`}
         >
           {item.icon}
           <span className="nav-label">{item.label}</span>

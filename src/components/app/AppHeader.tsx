@@ -16,9 +16,10 @@ export default function AppHeader({ initials = 'ME', showAvatar = true }: Props)
           <div style={{
             width: 30, height: 30, borderRadius: '50%',
             background: 'var(--green)', color: 'white',
-            fontSize: 9, fontWeight: 600,
+            fontSize: 11, fontWeight: 600,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             letterSpacing: '0.03em',
+            fontFamily: 'Fraunces, serif',
           }}>
             {initials}
           </div>

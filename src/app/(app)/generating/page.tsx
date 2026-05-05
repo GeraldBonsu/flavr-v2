@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
+import { useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics/client'
@@ -8,8 +8,11 @@ import { trackEvent } from '@/lib/analytics/client'
 function GeneratingInner() {
   const router       = useRouter()
   const searchParams = useSearchParams()
+  const hasRun       = useRef(false)
 
   useEffect(() => {
+    if (hasRun.current) return
+    hasRun.current = true
     const ingredients = searchParams.get('ingredients')?.split(',').filter(Boolean) ?? []
     const goal        = searchParams.get('goal') ?? 'balanced'
     const diet        = searchParams.get('diet')?.split(',').filter(Boolean) ?? []
