@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import BottomNav from '@/components/app/BottomNav'
 
 interface Props {
@@ -38,8 +38,24 @@ const GUIDES_PREVIEW = [
 
 export default function SubscriptionClient({ tier, name }: Props) {
   const router = useRouter()
-  const isPremium = tier === 'premium'
-  const [showUpgradeInfo, setShowUpgradeInfo] = useState(false)
+  const searchParams = useSearchParams()
+  const justUpgraded = searchParams.get('upgraded') === 'true'
+
+  const isPremium = tier === 'premium' || justUpgraded
+  const [loadingCheckout, setLoadingCheckout] = useState(false)
+
+  async function handleUpgrade() {
+    setLoadingCheckout(true)
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+      const data = await res.json() as { url?: string; error?: string }
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch {
+      setLoadingCheckout(false)
+    }
+  }
 
   return (
     <div className="screen" style={{ background: 'var(--bg)' }}>
@@ -221,6 +237,25 @@ export default function SubscriptionClient({ tier, name }: Props) {
           </div>
         </div>
 
+        {/* Success banner — shown after returning from Stripe */}
+        {justUpgraded && (
+          <div style={{
+            background: 'var(--tag-bg)', borderRadius: 'var(--r-card)',
+            border: '1px solid var(--green)', padding: '16px 18px',
+            display: 'flex', alignItems: 'center', gap: 12,
+          }}>
+            <span style={{ fontSize: 22 }}>🎉</span>
+            <div>
+              <div style={{ fontFamily: 'Fraunces, serif', fontSize: 15, color: 'var(--green)', marginBottom: 2 }}>
+                Welcome to Premium!
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
+                All features are now unlocked.
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Upgrade CTA (free users only) */}
         {!isPremium && (
           <div style={{
@@ -235,37 +270,22 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 Upgrade to Premium
               </div>
               <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.75)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6 }}>
-                Unlimited recipes, free PDF guides, and everything we add next.
+                Unlimited recipes, free PDF guides, and everything we add next — £2.99/month.
               </div>
             </div>
-
-            {!showUpgradeInfo ? (
-              <button
-                onClick={() => setShowUpgradeInfo(true)}
-                style={{
-                  padding: '13px', borderRadius: 'var(--r-pill)',
-                  background: 'var(--accent)', border: 'none', color: '#fff',
-                  fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-                  cursor: 'pointer',
-                }}
-              >
-                Upgrade to Premium →
-              </button>
-            ) : (
-              <div style={{
-                background: 'rgba(255,255,255,0.12)', borderRadius: 'var(--r-sm)',
-                padding: '14px', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 20, marginBottom: 6 }}>⏳</div>
-                <div style={{ fontFamily: 'Fraunces, serif', fontSize: 15, color: '#fff', marginBottom: 6 }}>
-                  Payments coming soon
-                </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6 }}>
-                  We&apos;re finishing up secure payments. You&apos;ll be notified at{' '}
-                  <span style={{ fontWeight: 600 }}>your registered email</span> the moment Premium launches.
-                </div>
-              </div>
-            )}
+            <button
+              onClick={() => void handleUpgrade()}
+              disabled={loadingCheckout}
+              style={{
+                padding: '13px', borderRadius: 'var(--r-pill)',
+                background: 'var(--accent)', border: 'none', color: '#fff',
+                fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
+                cursor: loadingCheckout ? 'not-allowed' : 'pointer',
+                opacity: loadingCheckout ? 0.7 : 1,
+              }}
+            >
+              {loadingCheckout ? 'Redirecting to checkout…' : 'Upgrade to Premium — £2.99/mo →'}
+            </button>
           </div>
         )}
 
