@@ -192,6 +192,54 @@ export type Database = {
         }
         Relationships: []
       }
+      pantry_items: {
+        Row: {
+          id: string
+          user_id: string
+          ingredient: string
+          category: string
+          added_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          ingredient: string
+          category?: string
+          added_at?: string
+        }
+        Update: {
+          ingredient?: string
+          category?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          id: string
+          user_id: string | null
+          type: string
+          name: string
+          email: string
+          message: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          type: string
+          name: string
+          email: string
+          message: string
+          created_at?: string
+        }
+        Update: {
+          type?: string
+          name?: string
+          email?: string
+          message?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

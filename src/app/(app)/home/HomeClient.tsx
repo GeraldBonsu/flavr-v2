@@ -1,7 +1,7 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
@@ -38,6 +38,7 @@ interface Profile {
 
 function HomeInner({ profile }: { profile: Profile | null }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { showToast } = useToast()
 
   const [ingredients, setIngredients] = useState<string[]>([])
@@ -56,6 +57,12 @@ function HomeInner({ profile }: { profile: Profile | null }) {
     if (!clean || clean.length < 2) return
     setIngredients(prev => prev.includes(clean) ? prev : [...prev, clean])
   }, [])
+
+  // Pre-fill from pantry "use it up" link (?pantry=spinach)
+  useEffect(() => {
+    const pantryParam = searchParams.get('pantry')
+    if (pantryParam) addIngredient(pantryParam)
+  }, [searchParams, addIngredient])
 
   const removeIngredient = (i: number) => setIngredients(prev => prev.filter((_, idx) => idx !== i))
 

@@ -24,7 +24,7 @@ const SETTINGS_ROWS = [
   { label: 'Pantry',         href: '/pantry' },
   { label: 'Subscription',   href: '#' },
   { label: 'Notifications',  href: '#' },
-  { label: 'Help & feedback',href: '#' },
+  { label: 'Help & feedback',href: '/help' },
 ]
 
 export default function AccountClient({
