@@ -2,11 +2,12 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
-const NAV_ITEMS = [
+const NAV_HREFS = [
   {
     href: '/home',
-    label: 'Cook',
+    key: 'cook' as const,
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
         <path d="M10 2C7 2 4.5 4 4.5 6.5c0 1.5.7 2.8 1.8 3.7L5 18h10l-1.3-7.8c1.1-.9 1.8-2.2 1.8-3.7C15.5 4 13 2 10 2z"/>
@@ -16,7 +17,7 @@ const NAV_ITEMS = [
   },
   {
     href: '/saved',
-    label: 'Saved',
+    key: 'saved' as const,
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
         <path d="M5 2h10a1 1 0 011 1v15l-6-3-6 3V3a1 1 0 011-1z"/>
@@ -25,7 +26,7 @@ const NAV_ITEMS = [
   },
   {
     href: '/plan',
-    label: 'Plan',
+    key: 'plan' as const,
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
         <rect x="2" y="4" width="16" height="14" rx="2"/>
@@ -35,7 +36,7 @@ const NAV_ITEMS = [
   },
   {
     href: '/learn',
-    label: 'Learn',
+    key: 'learn' as const,
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
         <path d="M10 2L2 6l8 4 8-4-8-4zM2 10l8 4 8-4M2 14l8 4 8-4"/>
@@ -44,7 +45,7 @@ const NAV_ITEMS = [
   },
   {
     href: '/account',
-    label: 'Me',
+    key: 'me' as const,
     icon: (
       <svg className="nav-svg" viewBox="0 0 20 20">
         <circle cx="10" cy="6" r="3.5"/>
@@ -56,6 +57,7 @@ const NAV_ITEMS = [
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const t = useTranslations('nav')
 
   const isActive = (href: string) => {
     if (href === '/home') return pathname === '/home' || pathname === '/'
@@ -64,14 +66,14 @@ export default function BottomNav() {
 
   return (
     <nav className="bottom-nav">
-      {NAV_ITEMS.map(item => (
+      {NAV_HREFS.map(item => (
         <Link
           key={item.href}
           href={item.href}
           className={`nav-item ${isActive(item.href) ? 'active' : ''}`}
         >
           {item.icon}
-          <span className="nav-label">{item.label}</span>
+          <span className="nav-label">{t(item.key)}</span>
         </Link>
       ))}
     </nav>

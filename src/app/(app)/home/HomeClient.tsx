@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
@@ -20,12 +21,7 @@ interface SpeechRec {
 }
 type SpeechRecCtor = new () => SpeechRec
 
-const GOAL_OPTIONS = [
-  { id: 'weight loss',  label: 'Weight loss' },
-  { id: 'muscle gain',  label: 'Muscle gain' },
-  { id: 'balanced',     label: 'Balance' },
-  { id: 'indulgence',   label: 'Indulge' },
-]
+const GOAL_IDS = ['weight loss', 'muscle gain', 'balanced', 'indulgence'] as const
 const QUICK_ADDS = ['Eggs', 'Rice', 'Tomatoes', 'Feta', 'Chickpeas', 'Garlic', 'Onion', 'Ginger']
 
 interface Profile {
@@ -40,6 +36,14 @@ function HomeInner({ profile }: { profile: Profile | null }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { showToast } = useToast()
+  const t = useTranslations('home')
+
+  const GOAL_OPTIONS = [
+    { id: 'weight loss',  label: t('goal_weight_loss') },
+    { id: 'muscle gain',  label: t('goal_muscle_gain') },
+    { id: 'balanced',     label: t('goal_balanced') },
+    { id: 'indulgence',   label: t('goal_indulgence') },
+  ]
 
   const [ingredients, setIngredients] = useState<string[]>([])
   const [goal, setGoal]               = useState(profile?.goal ?? 'muscle gain')
@@ -81,7 +85,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
       (window as Window & { SpeechRecognition?: SpeechRecCtor; webkitSpeechRecognition?: SpeechRecCtor }).SpeechRecognition
       ?? (window as Window & { webkitSpeechRecognition?: SpeechRecCtor }).webkitSpeechRecognition
     )
-    if (!SRCtor) { showToast('Voice not supported — try Chrome'); return }
+    if (!SRCtor) { showToast(t('voice_not_supported')); return }
     const rec = new SRCtor()
     rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US'
     rec.onresult = (e) => {
@@ -98,7 +102,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
     rec.onend   = () => { setIsListening(false); setTranscript('') }
     recognitionRef.current = rec
     rec.start(); setIsListening(true)
-  }, [addIngredient, showToast])
+  }, [addIngredient, showToast, t])
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop(); setIsListening(false); setTranscript('')
@@ -115,10 +119,10 @@ function HomeInner({ profile }: { profile: Profile | null }) {
       })
       const found = await res.json() as string[]
       if (!Array.isArray(found) || found.length === 0) {
-        showToast('No ingredients detected — try a clearer photo')
+        showToast(t('no_ingredients_detected'))
       } else {
         found.forEach(ing => addIngredient(ing))
-        showToast(`Found ${found.length} ingredient${found.length > 1 ? 's' : ''}!`)
+        showToast(t('found_ingredients', { count: found.length, plural: found.length !== 1 ? 's' : '' }))
       }
     } catch {
       showToast('Could not analyse image — please try again')
@@ -126,10 +130,10 @@ function HomeInner({ profile }: { profile: Profile | null }) {
       setAnalyzingImage(false)
       if (photoRef.current) photoRef.current.value = ''
     }
-  }, [addIngredient, showToast])
+  }, [addIngredient, showToast, t])
 
   const handleGenerate = () => {
-    if (ingredients.length < 2) { showToast('Add at least 2 ingredients'); return }
+    if (ingredients.length < 2) { showToast(t('min_ingredients')); return }
     const params = new URLSearchParams({
       ingredients: ingredients.join(','),
       goal,
@@ -142,7 +146,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
     router.push(`/generating?${params.toString()}`)
   }
 
-  const greeting = getGreeting()
+  const greeting = t(getGreetingKey())
   const name = profile?.name ?? 'there'
   const initials = profile?.initials ?? name.slice(0, 2).toUpperCase()
 
@@ -153,13 +157,13 @@ function HomeInner({ profile }: { profile: Profile | null }) {
       <div className="content-scroll" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div className="serif" style={{ fontSize: 18, fontWeight: 400, color: 'var(--text)', lineHeight: 1.3 }}>
           {greeting}, {name}.<br />
-          <em style={{ fontStyle: 'italic', color: 'var(--accent)' }}>What's in your kitchen?</em>
+          <em style={{ fontStyle: 'italic', color: 'var(--accent)' }}>{t('question')}</em>
         </div>
 
         {/* Ingredient input */}
         <div style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 12, padding: '10px 12px' }}>
           <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 8 }}>
-            Ingredients available
+            {t('ingredients_label')}
           </div>
 
           <div
@@ -177,7 +181,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
               value={inputVal}
               onChange={e => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={ingredients.length === 0 ? 'Type an ingredient, press Enter…' : ''}
+              placeholder={ingredients.length === 0 ? t('type_placeholder') : ''}
               style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 11, fontFamily: 'Epilogue, sans-serif', color: 'var(--text)', minWidth: 120, flex: 1 }}
             />
           </div>
@@ -196,7 +200,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
               }}
             >
               <MicIcon active={isListening} />
-              {isListening ? 'Listening…' : 'Voice note'}
+              {isListening ? t('listening') : t('voice_note')}
             </button>
 
             <button
@@ -212,7 +216,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
               }}
             >
               <CameraIcon />
-              {analyzingImage ? 'Scanning…' : 'Photo'}
+              {analyzingImage ? t('scanning') : t('photo')}
             </button>
 
             <input ref={photoRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { if (e.target.files?.[0]) void processFile(e.target.files[0]) }} />
@@ -227,7 +231,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
 
         {/* Quick add */}
         <div>
-          <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 7 }}>Quick add</div>
+          <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 7 }}>{t('quick_add')}</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
             {QUICK_ADDS.map(q => (
               <button key={q} onClick={() => addIngredient(q)} style={{
@@ -244,7 +248,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
 
         {/* Goal pills */}
         <div>
-          <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 7 }}>Your goal</div>
+          <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 7 }}>{t('your_goal')}</div>
           <div style={{ display: 'flex', gap: 5 }}>
             {GOAL_OPTIONS.map(g => (
               <button key={g.id} onClick={() => setGoal(g.id)} style={{
@@ -262,7 +266,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         </div>
 
         <button className="btn-accent" onClick={handleGenerate} disabled={ingredients.length < 2} style={{ marginTop: 4 }}>
-          Generate my recipe →
+          {t('generate_btn')}
         </button>
       </div>
 
@@ -279,11 +283,11 @@ export default function HomeClient({ profile }: { profile: Profile | null }) {
   )
 }
 
-function getGreeting() {
+function getGreetingKey(): 'greeting_morning' | 'greeting_afternoon' | 'greeting_evening' {
   const h = new Date().getHours()
-  if (h < 12) return 'Good morning'
-  if (h < 17) return 'Good afternoon'
-  return 'Good evening'
+  if (h < 12) return 'greeting_morning'
+  if (h < 17) return 'greeting_afternoon'
+  return 'greeting_evening'
 }
 
 function readFileAsBase64(file: File): Promise<string> {

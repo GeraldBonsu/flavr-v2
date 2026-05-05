@@ -5,10 +5,12 @@ export const dynamic = 'force-dynamic'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
   const router = useRouter()
+  const t = useTranslations('auth')
 
   const [name, setName]         = useState('')
   const [email, setEmail]       = useState('')
@@ -54,40 +56,22 @@ export default function SignupPage() {
 
       {/* Logo */}
       <Link href="/" style={{ textDecoration: 'none', marginBottom: 36, display: 'block' }}>
-        <span style={{
-          fontFamily: 'Fraunces, serif', fontStyle: 'italic',
-          fontWeight: 600, fontSize: 22,
-          color: 'var(--accent)', letterSpacing: '-0.02em',
-        }}>
+        <span style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 600, fontSize: 22, color: 'var(--accent)', letterSpacing: '-0.02em' }}>
           flavr.
         </span>
       </Link>
 
       {/* Heading */}
-      <h1 style={{
-        fontFamily: 'Fraunces, serif', fontStyle: 'italic',
-        fontWeight: 500, fontSize: 28,
-        color: '#fff', letterSpacing: '-0.02em',
-        lineHeight: 1.1, marginBottom: 6,
-      }}>
-        Create your account.
+      <h1 style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 500, fontSize: 28, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 6 }}>
+        {t('create_account')}
       </h1>
-      <p style={{
-        fontSize: 12.5, color: 'rgba(255,255,255,0.5)',
-        marginBottom: 28, fontFamily: 'Epilogue, sans-serif',
-      }}>
-        Start cooking smarter
+      <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', marginBottom: 28, fontFamily: 'Epilogue, sans-serif' }}>
+        {t('terms')}
       </p>
 
       {/* Error */}
       {error && (
-        <div style={{
-          background: 'rgba(184,74,30,0.18)',
-          border: '0.5px solid rgba(184,74,30,0.4)',
-          borderRadius: 10, padding: '10px 14px', marginBottom: 16,
-          fontSize: 12.5, color: 'var(--accent-soft)',
-          fontFamily: 'Epilogue, sans-serif',
-        }}>
+        <div style={{ background: 'rgba(184,74,30,0.18)', border: '0.5px solid rgba(184,74,30,0.4)', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontSize: 12.5, color: 'var(--accent-soft)', fontFamily: 'Epilogue, sans-serif' }}>
           {error}
         </div>
       )}
@@ -103,13 +87,13 @@ export default function SignupPage() {
         <input
           type="email" required
           value={email} onChange={e => setEmail(e.target.value)}
-          placeholder="Email address"
+          placeholder={t('email')}
           style={inputStyle}
         />
         <input
           type="password" required minLength={6}
           value={password} onChange={e => setPassword(e.target.value)}
-          placeholder="Password (min 6 characters)"
+          placeholder={t('password')}
           style={inputStyle}
         />
         <button
@@ -117,21 +101,19 @@ export default function SignupPage() {
           style={{
             marginTop: 6, padding: '14px',
             background: loading ? 'rgba(184,74,30,0.35)' : 'var(--accent)',
-            color: '#fff', border: 'none',
-            borderRadius: 'var(--r-pill)',
-            fontSize: 14, fontWeight: 500,
-            fontFamily: 'Epilogue, sans-serif',
+            color: '#fff', border: 'none', borderRadius: 'var(--r-pill)',
+            fontSize: 14, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
             cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? 'Creating account…' : 'Get started →'}
+          {loading ? t('signing_up') : t('sign_up')}
         </button>
       </form>
 
       {/* Divider */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '20px 0' }}>
         <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', fontFamily: 'Epilogue, sans-serif' }}>OR</span>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', fontFamily: 'Epilogue, sans-serif' }}>{t('or').toUpperCase()}</span>
         <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.12)' }} />
       </div>
 
@@ -140,28 +122,20 @@ export default function SignupPage() {
         onClick={handleGoogle}
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          padding: '13px 16px',
-          border: '0.5px solid rgba(255,255,255,0.2)',
-          borderRadius: 'var(--r-pill)',
-          background: 'rgba(255,255,255,0.07)', color: '#fff',
-          fontSize: 13, fontWeight: 500,
-          fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
+          padding: '13px 16px', border: '0.5px solid rgba(255,255,255,0.2)',
+          borderRadius: 'var(--r-pill)', background: 'rgba(255,255,255,0.07)', color: '#fff',
+          fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
         }}
       >
         <GoogleIcon />
-        Continue with Google
+        {t('google')}
       </button>
 
       {/* Footer */}
-      <p style={{
-        marginTop: 'auto', paddingTop: 28,
-        textAlign: 'center', fontSize: 11,
-        color: 'rgba(255,255,255,0.4)',
-        fontFamily: 'Epilogue, sans-serif',
-      }}>
-        Already have an account?{' '}
+      <p style={{ marginTop: 'auto', paddingTop: 28, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.4)', fontFamily: 'Epilogue, sans-serif' }}>
+        {t('have_account')}{' '}
         <Link href="/login" style={{ color: 'var(--accent-soft)', textDecoration: 'underline' }}>
-          Sign in
+          {t('sign_in_link')}
         </Link>
       </p>
     </div>

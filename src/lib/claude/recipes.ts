@@ -17,7 +17,7 @@ export interface GeneratedRecipe {
   protein: string
   carbs: string
   fats: string
-  ingredients: Array<{ item: string; amount: string; extra: boolean }>
+  ingredients: Array<{ item: string; amount: string; extra: boolean; kcal?: number }>
   steps: string[]
   goalNote: string
 }
@@ -48,7 +48,7 @@ Return ONLY this JSON (no markdown):
   "protein": "35g",
   "carbs": "28g",
   "fats": "18g",
-  "ingredients": [{"item": "chicken breast", "amount": "200g", "extra": false}],
+  "ingredients": [{"item": "chicken breast", "amount": "200g", "extra": false, "kcal": 165}],
   "steps": ["Step 1.", "Step 2.", "Step 3."],
   "goalNote": "Two sentences on why this recipe suits the ${params.goal} goal."
 }`,

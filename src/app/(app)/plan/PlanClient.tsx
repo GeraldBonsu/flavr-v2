@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
@@ -15,6 +16,7 @@ interface MealPlan {
 
 function PlanInner({ profile }: { profile: { goal?: string | null; dietary_restrictions?: string[] | null } | null }) {
   const { showToast } = useToast()
+  const t = useTranslations('plan')
   const [plan, setPlan]       = useState<MealPlan | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -44,12 +46,11 @@ function PlanInner({ profile }: { profile: { goal?: string | null; dietary_restr
       <AppHeader />
 
       <div className="content-scroll" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div className="serif" style={{ fontSize: 18, fontWeight: 400, color: 'var(--text)' }}>7-Day meal plan</div>
-        <div style={{ fontSize: 11, color: 'var(--muted)' }}>A personalised weekly plan based on your goal</div>
+        <div className="serif" style={{ fontSize: 18, fontWeight: 400, color: 'var(--text)' }}>{t('title')}</div>
 
         {!plan && (
           <button className="btn-dark" onClick={generate} disabled={loading} style={{ marginTop: 8 }}>
-            {loading ? 'Generating…' : 'Generate my plan →'}
+            {loading ? t('generating') : t('generate_btn')}
           </button>
         )}
 
@@ -57,9 +58,9 @@ function PlanInner({ profile }: { profile: { goal?: string | null; dietary_restr
           <>
             <div style={{ display: 'flex', gap: 8 }}>
               {[
-                { val: `${plan.avgKcal} kcal`, lbl: 'avg / day' },
-                { val: plan.avgProtein, lbl: 'avg protein' },
-                { val: String(plan.totalMeals), lbl: 'total meals' },
+                { val: `${plan.avgKcal} kcal`, lbl: t('avg_kcal') },
+                { val: plan.avgProtein, lbl: t('avg_protein') },
+                { val: String(plan.totalMeals), lbl: t('total_meals') },
               ].map(m => (
                 <div key={m.lbl} style={{ flex: 1, background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 10, padding: '10px 8px', textAlign: 'center' }}>
                   <div style={{ fontFamily: 'Fraunces, serif', fontSize: 16, fontWeight: 600, color: 'var(--accent)' }}>{m.val}</div>
@@ -84,7 +85,7 @@ function PlanInner({ profile }: { profile: { goal?: string | null; dietary_restr
             ))}
 
             <button onClick={generate} disabled={loading} style={{ padding: '10px', borderRadius: 10, border: '0.5px solid rgba(0,0,0,0.12)', background: '#fff', fontSize: 11, color: 'var(--muted)', cursor: 'pointer', fontFamily: 'Epilogue, sans-serif' }}>
-              {loading ? 'Regenerating…' : 'Regenerate plan'}
+              {loading ? t('generating') : t('generate_btn')}
             </button>
           </>
         )}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
 
@@ -17,32 +18,19 @@ interface Props {
   initialPrefs: NotifPrefs
 }
 
-const NOTIFICATION_ROWS: { key: keyof NotifPrefs; label: string; description: string }[] = [
-  {
-    key: 'weekly_recipes',
-    label: 'Weekly recipe ideas',
-    description: 'A curated selection of recipes based on your goals every week.',
-  },
-  {
-    key: 'pantry_reminders',
-    label: 'Pantry expiry reminders',
-    description: 'Alerts when fridge items in your pantry are getting old.',
-  },
-  {
-    key: 'cooking_tips',
-    label: 'Cooking tips',
-    description: 'Quick techniques and flavour tips delivered periodically.',
-  },
-  {
-    key: 'meal_plan',
-    label: 'Meal plan updates',
-    description: 'Reminders to review and update your weekly meal plan.',
-  },
+const NOTIFICATION_ROWS: { key: keyof NotifPrefs; tLabel: string; tDesc: string }[] = [
+  { key: 'weekly_recipes',   tLabel: 'weekly_label',    tDesc: 'weekly_desc' },
+  { key: 'pantry_reminders', tLabel: 'pantry_label',    tDesc: 'pantry_desc' },
+  { key: 'cooking_tips',     tLabel: 'tips_label',      tDesc: 'tips_desc' },
+  { key: 'meal_plan',        tLabel: 'meal_plan_label', tDesc: 'meal_plan_desc' },
 ]
 
 export default function NotificationsClient({ userId, initialPrefs }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const t = useTranslations('notifications')
+  type TKey = Parameters<typeof t>[0]
+
   const [prefs, setPrefs] = useState<NotifPrefs>(initialPrefs)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -78,35 +66,29 @@ export default function NotificationsClient({ userId, initialPrefs }: Props) {
             fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
           }}
         >
-          ← Back
+          {t('back')}
         </button>
         <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-          Notifications
+          {t('title')}
         </span>
         <div style={{ width: 52, display: 'flex', justifyContent: 'flex-end' }}>
           {saving && (
-            <span style={{ fontSize: 9, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>Saving…</span>
+            <span style={{ fontSize: 9, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>{t('saving')}</span>
           )}
           {saved && !saving && (
-            <span style={{ fontSize: 9, color: 'var(--green)', fontFamily: 'Epilogue, sans-serif' }}>Saved ✓</span>
+            <span style={{ fontSize: 9, color: 'var(--green)', fontFamily: 'Epilogue, sans-serif' }}>{t('saved_confirm')}</span>
           )}
         </div>
       </div>
 
       <div className="content-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-        <p style={{
-          fontSize: 12, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-          lineHeight: 1.6, margin: 0,
-        }}>
-          Choose what you&apos;d like to hear from us. Changes save automatically.
+        <p style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6, margin: 0 }}>
+          {t('subtitle')}
         </p>
 
         {/* Toggle rows */}
-        <div style={{
-          background: '#fff', borderRadius: 'var(--r-card)',
-          border: '0.5px solid var(--border)', overflow: 'hidden',
-        }}>
+        <div style={{ background: '#fff', borderRadius: 'var(--r-card)', border: '0.5px solid var(--border)', overflow: 'hidden' }}>
           {NOTIFICATION_ROWS.map((row, i) => (
             <div
               key={row.key}
@@ -117,21 +99,14 @@ export default function NotificationsClient({ userId, initialPrefs }: Props) {
               }}
             >
               <div style={{ flex: 1 }}>
-                <div style={{
-                  fontSize: 13, fontWeight: 500, color: 'var(--text)',
-                  fontFamily: 'Epilogue, sans-serif', marginBottom: 2,
-                }}>
-                  {row.label}
+                <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif', marginBottom: 2 }}>
+                  {t(row.tLabel as TKey)}
                 </div>
-                <div style={{
-                  fontSize: 10.5, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-                  lineHeight: 1.5,
-                }}>
-                  {row.description}
+                <div style={{ fontSize: 10.5, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.5 }}>
+                  {t(row.tDesc as TKey)}
                 </div>
               </div>
 
-              {/* Toggle switch */}
               <button
                 onClick={() => void toggle(row.key)}
                 role="switch"
@@ -158,22 +133,12 @@ export default function NotificationsClient({ userId, initialPrefs }: Props) {
         </div>
 
         {/* Info note */}
-        <div style={{
-          background: 'var(--tag-bg)', borderRadius: 'var(--r-xs)',
-          padding: '12px 14px', border: '1px solid var(--green)',
-        }}>
-          <div style={{
-            fontSize: 9, fontWeight: 600, letterSpacing: '0.1em',
-            textTransform: 'uppercase', color: 'var(--green)',
-            fontFamily: 'Epilogue, sans-serif', marginBottom: 4,
-          }}>
-            Note
+        <div style={{ background: 'var(--tag-bg)', borderRadius: 'var(--r-xs)', padding: '12px 14px', border: '1px solid var(--green)' }}>
+          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--green)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4 }}>
+            {t('note_title')}
           </div>
-          <p style={{
-            fontSize: 11, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif',
-            lineHeight: 1.6, margin: 0,
-          }}>
-            Push notifications are coming soon. For now, preferences are saved and will apply when the feature launches.
+          <p style={{ fontSize: 11, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6, margin: 0 }}>
+            {t('note_body')}
           </p>
         </div>
 

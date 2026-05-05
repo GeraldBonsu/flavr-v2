@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
@@ -34,15 +35,16 @@ function daysOld(added_at: string): number {
   return Math.floor((Date.now() - new Date(added_at).getTime()) / 86400000)
 }
 
-const CATEGORY_LABELS: Record<Category, string> = {
-  fridge: 'Fridge',
-  cupboard: 'Cupboard',
-  spices: 'Spices',
-}
-
 export default function PantryClient({ userId, initialItems }: Props) {
   const supabase = createClient()
   const fileRef = useRef<HTMLInputElement>(null)
+  const t = useTranslations('pantry')
+
+  const CATEGORY_LABELS: Record<Category, string> = {
+    fridge: t('fridge'),
+    cupboard: t('cupboard'),
+    spices: t('spices'),
+  }
 
   const [items, setItems] = useState<PantryItem[]>(initialItems)
   const [inputVal, setInputVal] = useState('')
@@ -56,7 +58,6 @@ export default function PantryClient({ userId, initialItems }: Props) {
   }))
 
   const totalCount = items.length
-
   const staleItems = items.filter(i => i.category === 'fridge' && daysOld(i.added_at) >= 3)
 
   async function addItem(name: string, cat: Category) {
@@ -131,10 +132,10 @@ export default function PantryClient({ userId, initialItems }: Props) {
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
           <div>
             <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 22, fontWeight: 500, color: 'var(--text)', margin: 0 }}>
-              My pantry
+              {t('title')}
             </h1>
             <p style={{ fontSize: 11, color: 'var(--muted)', fontStyle: 'italic', margin: '3px 0 0', fontFamily: 'Epilogue, sans-serif' }}>
-              We&apos;ll remember these for next time.
+              {t('subtitle')}
             </p>
           </div>
           <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
@@ -148,7 +149,7 @@ export default function PantryClient({ userId, initialItems }: Props) {
             value={inputVal}
             onChange={e => setInputVal(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="+ add ingredient"
+            placeholder={t('add_placeholder')}
             style={{
               flex: 1, padding: '10px 16px', borderRadius: 'var(--r-pill)',
               border: '0.5px solid var(--border)', background: '#fff',
@@ -196,30 +197,22 @@ export default function PantryClient({ userId, initialItems }: Props) {
         {grouped.map(({ cat, items: groupItems }) => (
           <div key={cat}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{
-                fontSize: 9, fontWeight: 500, letterSpacing: '0.12em',
-                textTransform: 'uppercase', color: 'var(--muted)',
-                fontFamily: 'Epilogue, sans-serif',
-              }}>
+              <span style={{ fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
                 {CATEGORY_LABELS[cat]} · {groupItems.length}
               </span>
               {groupItems.length > 0 && (
                 <button
                   onClick={() => setEditMode(editMode === cat ? null : cat)}
-                  style={{
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    fontSize: 9, color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif',
-                    fontWeight: 500, padding: 0,
-                  }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 9, color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif', fontWeight: 500, padding: 0 }}
                 >
-                  {editMode === cat ? 'done' : 'edit'}
+                  {editMode === cat ? t('done') : t('edit')}
                 </button>
               )}
             </div>
 
             {groupItems.length === 0 ? (
               <p style={{ fontSize: 11, color: 'var(--muted-light)', fontStyle: 'italic', fontFamily: 'Epilogue, sans-serif', margin: 0 }}>
-                Nothing here yet
+                {t('nothing_here')}
               </p>
             ) : (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -238,11 +231,7 @@ export default function PantryClient({ userId, initialItems }: Props) {
                     {editMode === cat && (
                       <button
                         onClick={() => void deleteItem(item.id)}
-                        style={{
-                          background: 'none', border: 'none', cursor: 'pointer',
-                          color: 'var(--accent)', fontSize: 12, lineHeight: 1,
-                          padding: 0, marginLeft: 2, fontWeight: 700,
-                        }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent)', fontSize: 12, lineHeight: 1, padding: 0, marginLeft: 2, fontWeight: 700 }}
                       >
                         ×
                       </button>
@@ -260,25 +249,18 @@ export default function PantryClient({ userId, initialItems }: Props) {
             {staleItems.slice(0, 3).map(item => (
               <div
                 key={item.id}
-                style={{
-                  background: 'var(--warn-bg)', borderRadius: 'var(--r-xs)',
-                  padding: '10px 14px',
-                }}
+                style={{ background: 'var(--warn-bg)', borderRadius: 'var(--r-xs)', padding: '10px 14px' }}
               >
-                <div style={{
-                  fontSize: 8, fontWeight: 700, letterSpacing: '0.1em',
-                  textTransform: 'uppercase', color: 'var(--accent)',
-                  fontFamily: 'Epilogue, sans-serif', marginBottom: 3,
-                }}>
-                  Use it up
+                <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif', marginBottom: 3 }}>
+                  {t('use_it_up')}
                 </div>
                 <span style={{ fontSize: 11.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-                  {item.ingredient} is {daysOld(item.added_at)} days old.{' '}
+                  {t('days_old', { ingredient: item.ingredient, days: daysOld(item.added_at) })}{' '}
                   <Link
                     href={`/home?pantry=${encodeURIComponent(item.ingredient)}`}
                     style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}
                   >
-                    Recipe ideas →
+                    {t('recipe_ideas')}
                   </Link>
                 </span>
               </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import BottomNav from '@/components/app/BottomNav'
 
 interface Props {
@@ -9,25 +10,25 @@ interface Props {
   name: string
 }
 
-const FREE_FEATURES = [
-  { label: 'AI recipe generation',        included: true },
-  { label: 'Save recipes',                included: true },
-  { label: 'Pantry tracking',             included: true },
-  { label: '5 recipes / day',             included: true },
-  { label: 'Unlimited recipes',           included: false },
-  { label: 'PDF cooking guides (free)',   included: false },
-  { label: 'Meal planning',               included: false },
-  { label: 'Priority support',            included: false },
-]
+const FREE_FEATURE_KEYS = [
+  { key: 'feature_ai',        included: true },
+  { key: 'feature_save',      included: true },
+  { key: 'feature_pantry',    included: true },
+  { key: 'feature_5day',      included: true },
+  { key: 'feature_unlimited', included: false },
+  { key: 'feature_pdf',       included: false },
+  { key: 'feature_meal_plan', included: false },
+  { key: 'feature_support',   included: false },
+] as const
 
-const PREMIUM_FEATURES = [
-  { label: 'Everything in Free',          included: true },
-  { label: 'Unlimited recipes',           included: true },
-  { label: 'PDF cooking guides (free)',   included: true },
-  { label: 'Meal planning',               included: true },
-  { label: 'Priority support',            included: true },
-  { label: 'Early access to new features',included: true },
-]
+const PREMIUM_FEATURE_KEYS = [
+  { key: 'feature_everything', included: true },
+  { key: 'feature_unlimited',  included: true },
+  { key: 'feature_pdf',        included: true },
+  { key: 'feature_meal_plan',  included: true },
+  { key: 'feature_support',    included: true },
+  { key: 'feature_early',      included: true },
+] as const
 
 const GUIDES_PREVIEW = [
   { title: 'West African Kitchen Essentials', pages: '24 pages', tag: 'Cooking' },
@@ -39,6 +40,7 @@ const GUIDES_PREVIEW = [
 export default function SubscriptionClient({ tier, name }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const t = useTranslations('subscription')
   const justUpgraded = searchParams.get('upgraded') === 'true'
 
   const isPremium = tier === 'premium' || justUpgraded
@@ -57,6 +59,8 @@ export default function SubscriptionClient({ tier, name }: Props) {
     }
   }
 
+  type FeatureKey = Parameters<typeof t>[0]
+
   return (
     <div className="screen" style={{ background: 'var(--bg)' }}>
 
@@ -74,10 +78,10 @@ export default function SubscriptionClient({ tier, name }: Props) {
             fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
           }}
         >
-          ← Back
+          {t('back')}
         </button>
         <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-          Subscription
+          {t('title')}
         </span>
         <div style={{ width: 52 }} />
       </div>
@@ -99,17 +103,17 @@ export default function SubscriptionClient({ tier, name }: Props) {
               color: isPremium ? 'rgba(255,255,255,0.65)' : 'var(--muted)',
               marginBottom: 4,
             }}>
-              Current plan
+              {t('current_plan')}
             </div>
             <div style={{
               fontFamily: 'Fraunces, serif', fontSize: 22,
               fontWeight: 500, color: isPremium ? '#fff' : 'var(--text)',
             }}>
-              {isPremium ? 'Premium' : 'Free'}
+              {isPremium ? t('premium') : t('free')}
             </div>
             {isPremium && (
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 3, fontFamily: 'Epilogue, sans-serif' }}>
-                All features unlocked
+                {t('all_unlocked')}
               </div>
             )}
           </div>
@@ -120,7 +124,7 @@ export default function SubscriptionClient({ tier, name }: Props) {
             fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
             textTransform: 'uppercase', fontFamily: 'Epilogue, sans-serif',
           }}>
-            {isPremium ? 'Active' : 'Free'}
+            {isPremium ? t('active') : t('free')}
           </div>
         </div>
 
@@ -131,14 +135,14 @@ export default function SubscriptionClient({ tier, name }: Props) {
             textTransform: 'uppercase', color: 'var(--muted)',
             fontFamily: 'Epilogue, sans-serif', marginBottom: 10,
           }}>
-            {isPremium ? "What's included" : 'Your plan includes'}
+            {isPremium ? t('whats_included') : t('your_plan')}
           </div>
           <div style={{
             background: '#fff', borderRadius: 'var(--r-card)',
             border: '0.5px solid var(--border)', overflow: 'hidden',
           }}>
-            {(isPremium ? PREMIUM_FEATURES : FREE_FEATURES).map((f, i, arr) => (
-              <div key={f.label} style={{
+            {(isPremium ? PREMIUM_FEATURE_KEYS : FREE_FEATURE_KEYS).map((f, i, arr) => (
+              <div key={f.key} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '12px 14px',
                 borderBottom: i < arr.length - 1 ? '0.5px solid var(--border)' : 'none',
@@ -156,15 +160,15 @@ export default function SubscriptionClient({ tier, name }: Props) {
                   fontSize: 12.5, color: f.included ? 'var(--text)' : 'var(--muted)',
                   fontFamily: 'Epilogue, sans-serif',
                 }}>
-                  {f.label}
+                  {t(f.key as FeatureKey)}
                 </span>
-                {!f.included && f.label.includes('PDF') && (
+                {!f.included && f.key === 'feature_pdf' && (
                   <span style={{
                     marginLeft: 'auto', fontSize: 9, color: 'var(--accent)',
                     fontFamily: 'Epilogue, sans-serif', fontWeight: 600,
                     letterSpacing: '0.05em', textTransform: 'uppercase',
                   }}>
-                    Premium
+                    {t('premium')}
                   </span>
                 )}
               </div>
@@ -179,7 +183,7 @@ export default function SubscriptionClient({ tier, name }: Props) {
             textTransform: 'uppercase', color: 'var(--muted)',
             fontFamily: 'Epilogue, sans-serif', marginBottom: 10,
           }}>
-            PDF cooking guides
+            {t('pdf_guides_title')}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {GUIDES_PREVIEW.map(guide => (
@@ -210,17 +214,12 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 </div>
                 <div>
                   {isPremium ? (
-                    <span style={{
-                      fontSize: 10, color: 'var(--green)', fontWeight: 600,
-                      fontFamily: 'Epilogue, sans-serif',
-                    }}>
-                      Free ✓
+                    <span style={{ fontSize: 10, color: 'var(--green)', fontWeight: 600, fontFamily: 'Epilogue, sans-serif' }}>
+                      {t('free_label')}
                     </span>
                   ) : (
-                    <span style={{
-                      fontSize: 10, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-                    }}>
-                      Buy →
+                    <span style={{ fontSize: 10, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
+                      {t('buy_label')}
                     </span>
                   )}
                 </div>
@@ -231,13 +230,13 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
                 fontStyle: 'italic', margin: 0, textAlign: 'center',
               }}>
-                Upgrade for free access, or purchase individual guides from our store (coming soon).
+                {t('store_note')}
               </p>
             )}
           </div>
         </div>
 
-        {/* Success banner — shown after returning from Stripe */}
+        {/* Success banner */}
         {justUpgraded && (
           <div style={{
             background: 'var(--tag-bg)', borderRadius: 'var(--r-card)',
@@ -247,10 +246,10 @@ export default function SubscriptionClient({ tier, name }: Props) {
             <span style={{ fontSize: 22 }}>🎉</span>
             <div>
               <div style={{ fontFamily: 'Fraunces, serif', fontSize: 15, color: 'var(--green)', marginBottom: 2 }}>
-                Welcome to Premium!
+                {t('welcome')}
               </div>
               <div style={{ fontSize: 11, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-                All features are now unlocked.
+                {t('welcome_body')}
               </div>
             </div>
           </div>
@@ -263,14 +262,11 @@ export default function SubscriptionClient({ tier, name }: Props) {
             padding: '18px', display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div>
-              <div style={{
-                fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 500,
-                color: '#fff', marginBottom: 4,
-              }}>
-                Upgrade to Premium
+              <div style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 500, color: '#fff', marginBottom: 4 }}>
+                {t('upgrade_title')}
               </div>
               <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.75)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6 }}>
-                Unlimited recipes, free PDF guides, and everything we add next — £2.99/month.
+                {t('upgrade_subtitle')}
               </div>
             </div>
             <button
@@ -284,7 +280,7 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 opacity: loadingCheckout ? 0.7 : 1,
               }}
             >
-              {loadingCheckout ? 'Redirecting to checkout…' : 'Upgrade to Premium — £2.99/mo →'}
+              {loadingCheckout ? t('redirecting') : t('upgrade_btn')}
             </button>
           </div>
         )}
@@ -297,10 +293,10 @@ export default function SubscriptionClient({ tier, name }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           }}>
             <span style={{ fontSize: 12.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-              Manage or cancel plan
+              {t('manage')}
             </span>
             <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
-              Coming soon ›
+              {t('coming_soon')}
             </span>
           </div>
         )}

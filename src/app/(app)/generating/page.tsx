@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics/client'
 
@@ -9,6 +10,7 @@ function GeneratingInner() {
   const router       = useRouter()
   const searchParams = useSearchParams()
   const hasRun       = useRef(false)
+  const t            = useTranslations('generating')
 
   useEffect(() => {
     if (hasRun.current) return
@@ -76,7 +78,7 @@ function GeneratingInner() {
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
       </svg>
       <div style={{ marginTop: 16, fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'Epilogue, sans-serif' }}>
-        Generating your recipe…
+        {t('title')}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
 
@@ -12,13 +13,6 @@ interface Props {
   email: string
   name: string
 }
-
-const TICKET_TYPES: { value: TicketType; label: string }[] = [
-  { value: 'billing',   label: 'Billing' },
-  { value: 'technical', label: 'Technical' },
-  { value: 'feedback',  label: 'Feedback' },
-  { value: 'other',     label: 'Other' },
-]
 
 const FAQS = [
   {
@@ -42,6 +36,14 @@ const FAQS = [
 export default function HelpClient({ userId, email, name }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const t = useTranslations('help')
+
+  const TICKET_TYPES: { value: TicketType; label: string }[] = [
+    { value: 'billing',   label: t('billing') },
+    { value: 'technical', label: t('technical') },
+    { value: 'feedback',  label: t('feedback') },
+    { value: 'other',     label: t('other') },
+  ]
 
   const [type, setType] = useState<TicketType>('technical')
   const [nameVal, setNameVal] = useState(name)
@@ -83,13 +85,10 @@ export default function HelpClient({ userId, email, name }: Props) {
             fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
           }}
         >
-          ← Back
+          {t('back')}
         </button>
-        <span style={{
-          fontSize: 12, fontWeight: 500, color: 'var(--text)',
-          fontFamily: 'Epilogue, sans-serif',
-        }}>
-          Help &amp; feedback
+        <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
+          {t('title')}
         </span>
         <div style={{ width: 52 }} />
       </div>
@@ -97,7 +96,6 @@ export default function HelpClient({ userId, email, name }: Props) {
       <div className="content-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
         {submitted ? (
-          /* Success state */
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             textAlign: 'center', padding: '40px 20px', gap: 14,
@@ -111,17 +109,11 @@ export default function HelpClient({ userId, email, name }: Props) {
               ✓
             </div>
             <div>
-              <p style={{
-                fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 500,
-                color: 'var(--text)', margin: '0 0 6px',
-              }}>
-                Message sent!
+              <p style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 500, color: 'var(--text)', margin: '0 0 6px' }}>
+                {t('success_title')}
               </p>
-              <p style={{
-                fontSize: 12, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-                lineHeight: 1.6, margin: 0,
-              }}>
-                We&apos;ll get back to you within 24 hours.
+              <p style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6, margin: 0 }}>
+                {t('success_body')}
               </p>
             </div>
             <button
@@ -129,11 +121,10 @@ export default function HelpClient({ userId, email, name }: Props) {
               style={{
                 marginTop: 8, padding: '12px 28px', borderRadius: 'var(--r-pill)',
                 background: 'var(--text)', border: 'none', color: '#fff',
-                fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-                cursor: 'pointer',
+                fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
               }}
             >
-              Back to account
+              {t('back_to_account')}
             </button>
           </div>
         ) : (
@@ -145,23 +136,23 @@ export default function HelpClient({ userId, email, name }: Props) {
                 textTransform: 'uppercase', color: 'var(--muted)',
                 fontFamily: 'Epilogue, sans-serif', marginBottom: 10,
               }}>
-                What&apos;s this about?
+                {t('about')}
               </div>
               <div style={{ display: 'flex', gap: 6 }}>
-                {TICKET_TYPES.map(t => (
+                {TICKET_TYPES.map(tt => (
                   <button
-                    key={t.value}
-                    onClick={() => setType(t.value)}
+                    key={tt.value}
+                    onClick={() => setType(tt.value)}
                     style={{
                       padding: '6px 14px', borderRadius: 'var(--r-pill)',
                       fontSize: 11.5, fontFamily: 'Epilogue, sans-serif', fontWeight: 500,
                       cursor: 'pointer',
-                      border: type === t.value ? 'none' : '0.5px solid var(--border-strong)',
-                      background: type === t.value ? 'var(--accent)' : '#fff',
-                      color: type === t.value ? '#fff' : 'var(--muted-dark)',
+                      border: type === tt.value ? 'none' : '0.5px solid var(--border-strong)',
+                      background: type === tt.value ? 'var(--accent)' : '#fff',
+                      color: type === tt.value ? '#fff' : 'var(--muted-dark)',
                     }}
                   >
-                    {t.label}
+                    {tt.label}
                   </button>
                 ))}
               </div>
@@ -169,74 +160,43 @@ export default function HelpClient({ userId, email, name }: Props) {
 
             {/* Form card */}
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{
-                background: '#fff', borderRadius: 'var(--r-card)',
-                border: '0.5px solid var(--border)', overflow: 'hidden',
-              }}>
-                {/* Name */}
+              <div style={{ background: '#fff', borderRadius: 'var(--r-card)', border: '0.5px solid var(--border)', overflow: 'hidden' }}>
                 <div style={{ padding: '12px 14px', borderBottom: '0.5px solid var(--border)' }}>
-                  <label style={{
-                    display: 'block', fontSize: 9, fontWeight: 500,
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4,
-                  }}>
-                    Name
+                  <label style={{ display: 'block', fontSize: 9, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4 }}>
+                    {t('name_label')}
                   </label>
                   <input
                     value={nameVal}
                     onChange={e => setNameVal(e.target.value)}
                     required
-                    style={{
-                      width: '100%', border: 'none', outline: 'none',
-                      fontSize: 13, fontFamily: 'Epilogue, sans-serif',
-                      color: 'var(--text)', background: 'transparent',
-                    }}
+                    style={{ width: '100%', border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Epilogue, sans-serif', color: 'var(--text)', background: 'transparent' }}
                   />
                 </div>
 
-                {/* Email */}
                 <div style={{ padding: '12px 14px', borderBottom: '0.5px solid var(--border)' }}>
-                  <label style={{
-                    display: 'block', fontSize: 9, fontWeight: 500,
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4,
-                  }}>
-                    Email
+                  <label style={{ display: 'block', fontSize: 9, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4 }}>
+                    {t('email_label')}
                   </label>
                   <input
                     value={emailVal}
                     onChange={e => setEmailVal(e.target.value)}
                     type="email"
                     required
-                    style={{
-                      width: '100%', border: 'none', outline: 'none',
-                      fontSize: 13, fontFamily: 'Epilogue, sans-serif',
-                      color: 'var(--text)', background: 'transparent',
-                    }}
+                    style={{ width: '100%', border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Epilogue, sans-serif', color: 'var(--text)', background: 'transparent' }}
                   />
                 </div>
 
-                {/* Message */}
                 <div style={{ padding: '12px 14px' }}>
-                  <label style={{
-                    display: 'block', fontSize: 9, fontWeight: 500,
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4,
-                  }}>
-                    Message
+                  <label style={{ display: 'block', fontSize: 9, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4 }}>
+                    {t('message_label')}
                   </label>
                   <textarea
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     required
                     rows={4}
-                    placeholder="Describe your issue or feedback…"
-                    style={{
-                      width: '100%', border: 'none', outline: 'none',
-                      fontSize: 13, fontFamily: 'Epilogue, sans-serif',
-                      color: 'var(--text)', background: 'transparent',
-                      resize: 'none', lineHeight: 1.6,
-                    }}
+                    placeholder={t('message_placeholder')}
+                    style={{ width: '100%', border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Epilogue, sans-serif', color: 'var(--text)', background: 'transparent', resize: 'none', lineHeight: 1.6 }}
                   />
                 </div>
               </div>
@@ -252,56 +212,45 @@ export default function HelpClient({ userId, email, name }: Props) {
                   opacity: submitting ? 0.7 : 1,
                 }}
               >
-                {submitting ? 'Sending…' : 'Send message'}
+                {submitting ? t('sending') : t('send')}
               </button>
             </form>
 
             {/* FAQ */}
             <div>
-              <div style={{
-                fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em',
-                textTransform: 'uppercase', color: 'var(--muted)',
-                fontFamily: 'Epilogue, sans-serif', marginBottom: 10,
-              }}>
-                Common questions
+              <div style={{ fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginBottom: 10 }}>
+                {t('faq_title')}
               </div>
-              <div style={{
-                background: '#fff', borderRadius: 'var(--r-card)',
-                border: '0.5px solid var(--border)', overflow: 'hidden',
-              }}>
+              <div style={{ background: '#fff', borderRadius: 'var(--r-card)', border: '0.5px solid var(--border)', overflow: 'hidden' }}>
                 {FAQS.map((faq, i) => (
                   <div key={i} style={{ borderBottom: i < FAQS.length - 1 ? '0.5px solid var(--border)' : 'none' }}>
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      style={{
-                        width: '100%', padding: '13px 14px',
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        background: 'none', border: 'none', cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
+                      style={{ width: '100%', padding: '13px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
                     >
-                      <span style={{
-                        fontSize: 12.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif',
-                        flex: 1, paddingRight: 10,
-                      }}>
+                      <span style={{ fontSize: 12.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif', flex: 1, paddingRight: 10 }}>
                         {faq.q}
                       </span>
-                      <span style={{ color: 'var(--muted)', fontSize: 14, flexShrink: 0 }}>
-                        {openFaq === i ? '−' : '+'}
-                      </span>
+                      <span style={{ color: 'var(--muted)', fontSize: 14, flexShrink: 0 }}>{openFaq === i ? '−' : '+'}</span>
                     </button>
                     {openFaq === i && (
-                      <div style={{
-                        padding: '0 14px 13px', fontSize: 12,
-                        color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-                        lineHeight: 1.6,
-                      }}>
+                      <div style={{ padding: '0 14px 13px', fontSize: 12, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6 }}>
                         {faq.a}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Note */}
+            <div style={{ background: 'var(--tag-bg)', borderRadius: 'var(--r-xs)', padding: '12px 14px', border: '1px solid var(--green)' }}>
+              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--green)', fontFamily: 'Epilogue, sans-serif', marginBottom: 4 }}>
+                {t('note_title')}
+              </div>
+              <p style={{ fontSize: 11, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif', lineHeight: 1.6, margin: 0 }}>
+                {t('note_body')}
+              </p>
             </div>
           </>
         )}

@@ -28,6 +28,7 @@ export type Database = {
           cultural_preferences: string[] | null
           subscription_tier: 'free' | 'premium'
           notification_preferences: Json
+          language: string
           onboarding_completed_at: string | null
           provider: string | null
           created_at: string
@@ -51,6 +52,7 @@ export type Database = {
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
           notification_preferences?: Json
+          language?: string
           onboarding_completed_at?: string | null
           provider?: string | null
           created_at?: string
@@ -74,6 +76,7 @@ export type Database = {
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
           notification_preferences?: Json
+          language?: string
           onboarding_completed_at?: string | null
           provider?: string | null
           created_at?: string

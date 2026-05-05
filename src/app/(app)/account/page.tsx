@@ -27,7 +27,7 @@ export default async function AccountPage() {
   const [profileRes, savedRes, cookedRes, datesRes] = await Promise.all([
     supabase
       .from('profiles')
-      .select('name, initials, goal, dietary_restrictions, cultural_preferences, intent, fitness_goal, subscription_tier')
+      .select('name, initials, goal, dietary_restrictions, cultural_preferences, intent, fitness_goal, subscription_tier, language')
       .eq('id', user.id)
       .single(),
     supabase

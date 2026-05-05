@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
@@ -15,16 +16,17 @@ interface Profile {
   intent?: string | null
   fitness_goal?: string | null
   subscription_tier?: string | null
+  language?: string | null
 }
 
 interface Stats { saved: number; cooked: number; streak: number }
 
-const SETTINGS_ROWS = [
-  { label: 'Update profile', href: '/onboarding' },
-  { label: 'Pantry',         href: '/pantry' },
-  { label: 'Subscription',   href: '/subscription' },
-  { label: 'Notifications',  href: '/notifications' },
-  { label: 'Help & feedback',href: '/help' },
+const LANG_OPTIONS = [
+  { code: 'en', flag: '🇬🇧', label: 'English' },
+  { code: 'fr', flag: '🇫🇷', label: 'Français' },
+  { code: 'ar', flag: '🇸🇦', label: 'العربية' },
+  { code: 'yo', flag: '🇳🇬', label: 'Yorùbá' },
+  { code: 'ha', flag: '🇳🇬', label: 'Hausa' },
 ]
 
 export default function AccountClient({
@@ -37,6 +39,8 @@ export default function AccountClient({
   stats: Stats
 }) {
   const router = useRouter()
+  const t = useTranslations('account')
+  const tLang = useTranslations('languages')
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -45,11 +49,21 @@ export default function AccountClient({
     router.refresh()
   }
 
+  const handleLanguageChange = async (lang: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('profiles').update({ language: lang }).eq('id', user.id)
+    }
+    document.cookie = `FLAVR_LANG=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`
+    router.refresh()
+  }
+
   const name     = profile?.name ?? 'You'
   const initials = profile?.initials ?? name.slice(0, 2).toUpperCase()
   const isPro    = profile?.subscription_tier === 'premium'
+  const currentLang = profile?.language ?? 'en'
 
-  // Build profile tag list
   const goalLabel = profile?.fitness_goal
     ? { lose_weight: 'Lose weight', gain_muscle: 'Build muscle', maintain: 'Maintain', recomp: 'Recomp' }[profile.fitness_goal]
     : profile?.goal ?? profile?.intent ?? null
@@ -58,6 +72,14 @@ export default function AccountClient({
     ...(profile?.dietary_restrictions ?? []),
     ...(profile?.cultural_preferences ?? []),
   ].filter(Boolean) as string[]
+
+  const SETTINGS_ROWS = [
+    { label: t('update_profile'), href: '/onboarding' },
+    { label: t('pantry'),         href: '/pantry' },
+    { label: t('subscription'),   href: '/subscription' },
+    { label: t('notifications'),  href: '/notifications' },
+    { label: t('help'),           href: '/help' },
+  ]
 
   return (
     <div className="screen" style={{ background: 'var(--bg)' }}>
@@ -111,9 +133,9 @@ export default function AccountClient({
           border: '0.5px solid var(--border)', overflow: 'hidden',
         }}>
           {[
-            { val: stats.cooked, lbl: 'Cooked' },
-            { val: stats.saved,  lbl: 'Saved' },
-            { val: `${stats.streak}d`, lbl: 'Streak' },
+            { val: stats.cooked, lbl: t('cooked') },
+            { val: stats.saved,  lbl: t('saved') },
+            { val: `${stats.streak}d`, lbl: t('streak') },
           ].map((s, i) => (
             <div key={s.lbl} style={{
               padding: '12px 8px', textAlign: 'center',
@@ -138,7 +160,7 @@ export default function AccountClient({
         {/* Profile tags */}
         <div>
           <div className="section-label" style={{ display: 'block', marginBottom: 8 }}>
-            Your profile
+            {t('your_profile')}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {profileTags.map(tag => (
@@ -162,6 +184,41 @@ export default function AccountClient({
           </div>
         </div>
 
+        {/* Language selector */}
+        <div>
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
+              {t('language_title')}
+            </div>
+            <div style={{ fontSize: 10.5, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif', marginTop: 2 }}>
+              {t('language_subtitle')}
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {LANG_OPTIONS.map(lang => {
+              const active = currentLang === lang.code
+              return (
+                <button
+                  key={lang.code}
+                  onClick={() => void handleLanguageChange(lang.code)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    padding: '6px 12px', borderRadius: 'var(--r-pill)',
+                    border: active ? '1.5px solid var(--green)' : '0.5px solid var(--border-strong)',
+                    background: active ? 'var(--tag-bg)' : '#fff',
+                    color: active ? 'var(--green)' : 'var(--muted-dark)',
+                    fontSize: 11.5, fontWeight: active ? 600 : 400,
+                    fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
+                  }}
+                >
+                  <span>{lang.flag}</span>
+                  <span>{tLang(lang.code as Parameters<typeof tLang>[0])}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         {/* Settings list */}
         <div style={{
           background: '#fff', borderRadius: 'var(--r-option)',
@@ -169,7 +226,7 @@ export default function AccountClient({
         }}>
           {SETTINGS_ROWS.map((row, i) => (
             <Link
-              key={row.label}
+              key={row.href}
               href={row.href}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -195,7 +252,7 @@ export default function AccountClient({
               textAlign: 'left',
             }}
           >
-            Sign out
+            {t('sign_out')}
             <span style={{ fontSize: 14 }}>›</span>
           </button>
         </div>

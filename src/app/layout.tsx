@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next'
+import { getLocale, getMessages } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,13 +15,18 @@ export const viewport: Viewport = {
   themeColor: '#1A3A0A',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="en" className="h-full">
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="h-full">
       <body className="min-h-full flex justify-center">
-        <div className="phone-shell">
-          {children}
-        </div>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <div className="phone-shell">
+            {children}
+          </div>
+        </NextIntlClientProvider>
       </body>
     </html>
   )
