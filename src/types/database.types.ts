@@ -27,6 +27,7 @@ export type Database = {
           dietary_restrictions: string[] | null
           cultural_preferences: string[] | null
           subscription_tier: 'free' | 'premium'
+          notification_preferences: Json
           onboarding_completed_at: string | null
           provider: string | null
           created_at: string
@@ -49,6 +50,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          notification_preferences?: Json
           onboarding_completed_at?: string | null
           provider?: string | null
           created_at?: string
@@ -71,6 +73,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          notification_preferences?: Json
           onboarding_completed_at?: string | null
           provider?: string | null
           created_at?: string

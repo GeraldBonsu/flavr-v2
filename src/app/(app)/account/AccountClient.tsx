@@ -22,8 +22,8 @@ interface Stats { saved: number; cooked: number; streak: number }
 const SETTINGS_ROWS = [
   { label: 'Update profile', href: '/onboarding' },
   { label: 'Pantry',         href: '/pantry' },
-  { label: 'Subscription',   href: '#' },
-  { label: 'Notifications',  href: '#' },
+  { label: 'Subscription',   href: '/subscription' },
+  { label: 'Notifications',  href: '/notifications' },
   { label: 'Help & feedback',href: '/help' },
 ]
 
