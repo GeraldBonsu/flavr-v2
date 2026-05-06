@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server'
 import { cookies } from 'next/headers'
 
-const SUPPORTED = ['en', 'fr', 'ar', 'yo', 'ha'] as const
+const SUPPORTED = ['en', 'fr', 'ar', 'yo', 'ha', 'es', 'sw'] as const
 type Locale = typeof SUPPORTED[number]
 
 function isSupportedLocale(l: string): l is Locale {

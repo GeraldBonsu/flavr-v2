@@ -27,6 +27,8 @@ const LANG_OPTIONS = [
   { code: 'ar', flag: '🇸🇦', label: 'العربية' },
   { code: 'yo', flag: '🇳🇬', label: 'Yorùbá' },
   { code: 'ha', flag: '🇳🇬', label: 'Hausa' },
+  { code: 'es', flag: '🇪🇸', label: 'Español' },
+  { code: 'sw', flag: '🇰🇪', label: 'Kiswahili' },
 ]
 
 export default function AccountClient({
