@@ -31,11 +31,32 @@ const PREMIUM_FEATURE_KEYS = [
 ] as const
 
 const GUIDES_PREVIEW = [
-  { title: 'West African Kitchen Essentials', pages: '24 pages', tag: 'Cooking' },
-  { title: 'High-Protein Meal Prep Guide',    pages: '18 pages', tag: 'Fitness' },
-  { title: 'Spice Blending Handbook',         pages: '32 pages', tag: 'Flavour' },
-  { title: 'Budget Cooking: 30 Meals',        pages: '28 pages', tag: 'Budget' },
+  {
+    title: '30 High Protein Dinners',
+    meta: 'Real meals with 30–50g protein',
+    tag: 'Fitness',
+    url: 'https://flavr-9927.myshopify.com/products/30-high-protein-dinners-real-meals-with-30-50g-protein-no-shakes-no-boring-food',
+  },
+  {
+    title: 'The Mediterranean Reset',
+    meta: '14-day meal plan for energy & health',
+    tag: 'Health',
+    url: 'https://flavr-9927.myshopify.com/products/the-mediterranean-reset-a-14-day-modern-meal-plan-for-energy-health-balance?variant=57985737490819',
+  },
+  {
+    title: 'Weeknight Vegan',
+    meta: '36 fast plant-based dinners in ≤22 min',
+    tag: 'Plant-based',
+    url: 'https://flavr-9927.myshopify.com/products/weeknight-vegan-36-fast-plant-based-dinners-ready-in-22-minutes-or-less?variant=57985732673923',
+  },
 ]
+
+const BUNDLE = {
+  title: 'The Flavr Ultimate Bundle',
+  meta: '3 cookbooks · save £10',
+  tag: 'Bundle',
+  url: 'https://flavr-9927.myshopify.com/products/the-flavr-ultimate-bundle-3-cookbooks-for-everyday-cooking-health-performance?variant=57985769996675',
+}
 
 export default function SubscriptionClient({ tier, name }: Props) {
   const router = useRouter()
@@ -192,7 +213,6 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 border: '0.5px solid var(--border)',
                 padding: '12px 14px',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                opacity: isPremium ? 1 : 0.7,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
@@ -208,7 +228,7 @@ export default function SubscriptionClient({ tier, name }: Props) {
                       {guide.title}
                     </div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, fontFamily: 'Epilogue, sans-serif' }}>
-                      {guide.pages} · {guide.tag}
+                      {guide.meta} · {guide.tag}
                     </div>
                   </div>
                 </div>
@@ -218,13 +238,61 @@ export default function SubscriptionClient({ tier, name }: Props) {
                       {t('free_label')}
                     </span>
                   ) : (
-                    <span style={{ fontSize: 10, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
+                    <a
+                      href={guide.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: 10, color: 'var(--accent)', fontWeight: 600,
+                        fontFamily: 'Epilogue, sans-serif', textDecoration: 'none',
+                      }}
+                    >
                       {t('buy_label')}
-                    </span>
+                    </a>
                   )}
                 </div>
               </div>
             ))}
+
+            {/* Bundle card — always visible, separate purchase */}
+            <a
+              href={BUNDLE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'var(--text)', borderRadius: 'var(--r-sm)',
+                padding: '12px 14px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                textDecoration: 'none',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                  background: 'rgba(255,255,255,0.12)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16,
+                }}>
+                  📦
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', fontFamily: 'Epilogue, sans-serif' }}>
+                    {BUNDLE.title}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 2, fontFamily: 'Epilogue, sans-serif' }}>
+                    {BUNDLE.meta}
+                  </div>
+                </div>
+              </div>
+              <span style={{
+                fontSize: 9.5, color: 'var(--accent)', fontWeight: 700,
+                fontFamily: 'Epilogue, sans-serif', letterSpacing: '0.05em',
+                textTransform: 'uppercase', whiteSpace: 'nowrap',
+              }}>
+                SAVE £10 →
+              </span>
+            </a>
+
             {!isPremium && (
               <p style={{
                 fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
