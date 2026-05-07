@@ -21,22 +21,32 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError(null)
-    const supabase = createClient()
-    const { error } = await supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: name.trim() } },
+
+    // Create user server-side — bypasses email confirmation entirely
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name }),
     })
-    if (error) {
-      const msg = error.message.toLowerCase()
-      if (msg.includes('rate limit') || msg.includes('too many')) {
-        setError('Too many sign-up attempts right now. Please try again in a few minutes.')
-      } else if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('user already')) {
-        setError('An account with this email already exists. Try signing in instead.')
-      } else {
-        setError(error.message)
-      }
+    const data = await res.json() as { success?: boolean; error?: string }
+
+    if (!res.ok) {
+      setError(data.error ?? 'Something went wrong. Please try again.')
       setLoading(false)
-    } else { router.push('/onboarding'); router.refresh() }
+      return
+    }
+
+    // Sign in to create a client-side session
+    const supabase = createClient()
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    if (signInError) {
+      setError('Account created — please sign in to continue.')
+      setLoading(false)
+      return
+    }
+
+    router.push('/onboarding')
+    router.refresh()
   }
 
   const handleGoogle = async () => {
