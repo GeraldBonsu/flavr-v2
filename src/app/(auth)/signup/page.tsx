@@ -26,8 +26,17 @@ export default function SignupPage() {
       email, password,
       options: { data: { full_name: name.trim() } },
     })
-    if (error) { setError(error.message); setLoading(false) }
-    else { router.push('/onboarding'); router.refresh() }
+    if (error) {
+      const msg = error.message.toLowerCase()
+      if (msg.includes('rate limit') || msg.includes('too many')) {
+        setError('Too many sign-up attempts right now. Please try again in a few minutes.')
+      } else if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('user already')) {
+        setError('An account with this email already exists. Try signing in instead.')
+      } else {
+        setError(error.message)
+      }
+      setLoading(false)
+    } else { router.push('/onboarding'); router.refresh() }
   }
 
   const handleGoogle = async () => {
