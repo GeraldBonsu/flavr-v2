@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
           .single()
         if (data?.language) {
           response.cookies.set('FLAVR_LANG', data.language as string, {
-            path: '/', sameSite: 'lax', maxAge: 60 * 60 * 24 * 365,
+            path: '/', sameSite: 'lax', secure: true, maxAge: 60 * 60 * 24 * 365,
           })
         }
       }

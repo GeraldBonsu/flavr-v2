@@ -31,11 +31,14 @@ export default function SignupPage() {
   }
 
   const handleGoogle = async () => {
+    setError(null)
     const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/onboarding` },
+      options: { redirectTo: `${appUrl}/auth/callback?next=/onboarding` },
     })
+    if (error) setError(error.message)
   }
 
   const inputStyle: React.CSSProperties = {
