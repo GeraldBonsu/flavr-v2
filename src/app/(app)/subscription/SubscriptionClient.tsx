@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import BottomNav from '@/components/app/BottomNav'
@@ -58,6 +57,8 @@ const BUNDLE = {
   url: 'https://flavr-9927.myshopify.com/products/the-flavr-ultimate-bundle-3-cookbooks-for-everyday-cooking-health-performance?variant=57985769996675',
 }
 
+const PREMIUM_URL = 'https://flavr-9927.myshopify.com/products/flavr-premium-access?variant=57985938325891'
+
 export default function SubscriptionClient({ tier, name }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -65,20 +66,6 @@ export default function SubscriptionClient({ tier, name }: Props) {
   const justUpgraded = searchParams.get('upgraded') === 'true'
 
   const isPremium = tier === 'premium' || justUpgraded
-  const [loadingCheckout, setLoadingCheckout] = useState(false)
-
-  async function handleUpgrade() {
-    setLoadingCheckout(true)
-    try {
-      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
-      const data = await res.json() as { url?: string; error?: string }
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      setLoadingCheckout(false)
-    }
-  }
 
   type FeatureKey = Parameters<typeof t>[0]
 
@@ -337,19 +324,20 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 {t('upgrade_subtitle')}
               </div>
             </div>
-            <button
-              onClick={() => void handleUpgrade()}
-              disabled={loadingCheckout}
+            <a
+              href={PREMIUM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
+                display: 'block', textAlign: 'center',
                 padding: '13px', borderRadius: 'var(--r-pill)',
-                background: 'var(--accent)', border: 'none', color: '#fff',
+                background: 'var(--accent)', color: '#fff',
                 fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-                cursor: loadingCheckout ? 'not-allowed' : 'pointer',
-                opacity: loadingCheckout ? 0.7 : 1,
+                textDecoration: 'none',
               }}
             >
-              {loadingCheckout ? t('redirecting') : t('upgrade_btn')}
-            </button>
+              {t('upgrade_btn')}
+            </a>
           </div>
         )}
 
