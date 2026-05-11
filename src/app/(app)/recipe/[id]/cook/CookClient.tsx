@@ -132,7 +132,7 @@ export default function CookClient({ recipeId, recipeName, emoji, steps }: Props
   }, [duration])
 
   const goNext = () => {
-    if (isLast) { router.push(`/recipe/${recipeId}`) }
+    if (isLast) { router.push(`/recipe/${recipeId}?from=cook`) }
     else { setStepIdx(i => i + 1) }
   }
   const goPrev = () => { if (stepIdx > 0) setStepIdx(i => i - 1) }

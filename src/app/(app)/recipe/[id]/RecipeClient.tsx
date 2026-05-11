@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import FeedbackModal from '@/components/app/FeedbackModal'
@@ -19,21 +19,25 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
   const { showToast } = useToast()
   const t = useTranslations('recipe')
 
+  const searchParams = useSearchParams()
   const [feedback, setFeedback] = useState<Feedback>(existingFeedback)
   const [modalMode, setModalMode] = useState<'rating' | 'cooked' | null>(null)
-  const thirtySecRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     void trackEvent('recipe_saved', { recipe_id: recipe.id })
 
-    // Show thumbs after 30s if not yet rated
     if (!existingFeedback?.rating) {
-      thirtySecRef.current = setTimeout(() => {
+      if (searchParams.get('from') === 'cook') {
+        // Returned from cooking journey — show feedback immediately
         setModalMode('rating')
-      }, 30_000)
+      } else {
+        // Show after 5 minutes of idle reading
+        timerRef.current = setTimeout(() => setModalMode('rating'), 300_000)
+      }
     }
     return () => {
-      if (thirtySecRef.current) clearTimeout(thirtySecRef.current)
+      if (timerRef.current) clearTimeout(timerRef.current)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
