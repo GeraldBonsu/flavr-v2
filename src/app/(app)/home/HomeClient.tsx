@@ -291,16 +291,22 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         </button>
 
         {/* Ask Chef */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ flex: 1, height: '0.5px', background: 'rgba(0,0,0,0.08)' }} />
-          <button
-            onClick={() => { setAskOpen(v => !v); setAskResult(null) }}
-            style={{ fontSize: 10, color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Epilogue, sans-serif', whiteSpace: 'nowrap' }}
-          >
-            {askOpen ? 'Close ✕' : 'Ask about a recipe →'}
-          </button>
-          <div style={{ flex: 1, height: '0.5px', background: 'rgba(0,0,0,0.08)' }} />
-        </div>
+        <button
+          onClick={() => { setAskOpen(v => !v); setAskResult(null) }}
+          style={{
+            width: '100%', padding: '12px',
+            background: 'var(--accent-soft)', color: '#fff',
+            border: 'none', borderRadius: 'var(--r-pill)',
+            fontSize: 13, fontWeight: 500,
+            fontFamily: 'Epilogue, sans-serif',
+            cursor: 'pointer', transition: 'opacity 0.12s',
+            marginTop: 4,
+          }}
+          onMouseDown={e => (e.currentTarget.style.opacity = '0.88')}
+          onMouseUp={e => (e.currentTarget.style.opacity = '1')}
+        >
+          {askOpen ? 'Close ✕' : 'Ask about a recipe →'}
+        </button>
 
         {askOpen && (
           <div style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 12, padding: '12px' }}>
