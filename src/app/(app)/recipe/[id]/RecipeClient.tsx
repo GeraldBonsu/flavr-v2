@@ -22,7 +22,18 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
   const searchParams = useSearchParams()
   const [feedback, setFeedback] = useState<Feedback>(existingFeedback)
   const [modalMode, setModalMode] = useState<'rating' | 'cooked' | null>(null)
+  const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set())
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const toggleItem = (i: number) =>
+    setCheckedItems(prev => { const s = new Set(prev); s.has(i) ? s.delete(i) : s.add(i); return s })
+  const allChecked = checkedItems.size === ingredients.length && ingredients.length > 0
+
+  const handleGenerateAnother = () => {
+    const items = ingredients.map(ing => ing.item).join(',')
+    const params = new URLSearchParams({ ingredients: items, goal: recipe.goal ?? 'balanced' })
+    router.push(`/generating?${params.toString()}`)
+  }
 
   useEffect(() => {
     void trackEvent('recipe_saved', { recipe_id: recipe.id })
@@ -113,6 +124,36 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
           ))}
         </div>
 
+        {/* Shopping list */}
+        <div>
+          <div className="sec-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {t('whats_needed')}
+            {allChecked && <span style={{ fontSize: 9, color: 'var(--green)', fontWeight: 600 }}>✓ {t('all_set')}</span>}
+          </div>
+          {ingredients.map((ing, i) => (
+            <div
+              key={i}
+              onClick={() => toggleItem(i)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
+                borderBottom: '0.5px solid rgba(0,0,0,0.05)', cursor: 'pointer',
+                opacity: checkedItems.has(i) ? 0.4 : 1,
+              }}
+            >
+              <div style={{
+                width: 16, height: 16, borderRadius: 4, flexShrink: 0,
+                border: checkedItems.has(i) ? 'none' : '1.5px solid rgba(0,0,0,0.18)',
+                background: checkedItems.has(i) ? 'var(--green)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {checkedItems.has(i) && <span style={{ color: '#fff', fontSize: 9, lineHeight: 1 }}>✓</span>}
+              </div>
+              <span style={{ fontSize: 10, color: 'var(--text)', flex: 1, textDecoration: checkedItems.has(i) ? 'line-through' : 'none' }}>{ing.item}</span>
+              <span style={{ fontSize: 9, color: 'var(--muted)', fontWeight: 500 }}>{ing.amount}</span>
+            </div>
+          ))}
+        </div>
+
         {recipe.goal_note && (
           <div style={{ background: 'var(--tag-bg)', borderRadius: 10, padding: '10px 12px' }}>
             <div style={{ fontSize: 8, fontWeight: 600, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>
@@ -154,12 +195,21 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
         }}>
           {t('start_cooking')}
         </Link>
-        <Link href="/home" onClick={() => showToast('Starting new recipe…')} style={{
-          display: 'block', textAlign: 'center', fontSize: 12,
-          color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
-          textDecoration: 'none', padding: '4px 0',
+        <button onClick={handleGenerateAnother} style={{
+          display: 'block', width: '100%', padding: '13px',
+          background: 'none', color: 'var(--text)',
+          border: '0.5px solid var(--border)',
+          borderRadius: 'var(--r-pill)', fontSize: 13, fontWeight: 500,
+          fontFamily: 'Epilogue, sans-serif', cursor: 'pointer',
         }}>
-          {t('generate_new')}
+          {t('generate_another')}
+        </button>
+        <Link href="/home" style={{
+          display: 'block', textAlign: 'center', fontSize: 11,
+          color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif',
+          textDecoration: 'none', padding: '2px 0',
+        }}>
+          {t('change_ingredients')}
         </Link>
       </div>
 

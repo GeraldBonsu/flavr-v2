@@ -7,6 +7,7 @@ import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
 import { trackEvent } from '@/lib/analytics/client'
+import type { RecipeShoppingList } from '@/lib/claude/recipes'
 
 // Browser speech recognition — not in all TypeScript DOM libs
 interface SpeechRec {
@@ -48,6 +49,10 @@ function HomeInner({ profile }: { profile: Profile | null }) {
   const [ingredients, setIngredients] = useState<string[]>([])
   const [goal, setGoal]               = useState(profile?.goal ?? 'muscle gain')
   const [inputVal, setInputVal]       = useState('')
+  const [askOpen, setAskOpen]         = useState(false)
+  const [askQuery, setAskQuery]       = useState('')
+  const [askResult, setAskResult]     = useState<RecipeShoppingList | null>(null)
+  const [askLoading, setAskLoading]   = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript]   = useState('')
   const [analyzingImage, setAnalyzingImage] = useState(false)
@@ -131,6 +136,22 @@ function HomeInner({ profile }: { profile: Profile | null }) {
       if (photoRef.current) photoRef.current.value = ''
     }
   }, [addIngredient, showToast, t])
+
+  const handleAskChef = async () => {
+    if (!askQuery.trim()) return
+    setAskLoading(true); setAskResult(null)
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'lookupRecipeIngredients', recipeName: askQuery.trim() }),
+      })
+      const data = await res.json() as RecipeShoppingList
+      setAskResult(data)
+    } finally {
+      setAskLoading(false)
+    }
+  }
 
   const handleGenerate = () => {
     if (ingredients.length < 2) { showToast(t('min_ingredients')); return }
@@ -268,6 +289,55 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         <button className="btn-accent" onClick={handleGenerate} disabled={ingredients.length < 2} style={{ marginTop: 4 }}>
           {t('generate_btn')}
         </button>
+
+        {/* Ask Chef */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ flex: 1, height: '0.5px', background: 'rgba(0,0,0,0.08)' }} />
+          <button
+            onClick={() => { setAskOpen(v => !v); setAskResult(null) }}
+            style={{ fontSize: 10, color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Epilogue, sans-serif', whiteSpace: 'nowrap' }}
+          >
+            {askOpen ? 'Close ✕' : 'Ask about a recipe →'}
+          </button>
+          <div style={{ flex: 1, height: '0.5px', background: 'rgba(0,0,0,0.08)' }} />
+        </div>
+
+        {askOpen && (
+          <div style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 12, padding: '12px' }}>
+            <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-light)', marginBottom: 8 }}>
+              WHAT DO YOU NEED?
+            </div>
+            <div style={{ display: 'flex', gap: 7 }}>
+              <input
+                value={askQuery}
+                onChange={e => setAskQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') void handleAskChef() }}
+                placeholder="e.g. Pad Thai, Jollof Rice…"
+                style={{ flex: 1, border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '8px 10px', fontSize: 11, fontFamily: 'Epilogue, sans-serif', outline: 'none', color: 'var(--text)' }}
+              />
+              <button
+                onClick={() => void handleAskChef()}
+                disabled={askLoading}
+                style={{ padding: '8px 14px', background: 'var(--accent)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 11, fontWeight: 500, fontFamily: 'Epilogue, sans-serif', cursor: askLoading ? 'not-allowed' : 'pointer', opacity: askLoading ? 0.6 : 1 }}
+              >
+                {askLoading ? '…' : 'Ask'}
+              </button>
+            </div>
+            {askResult && (
+              <div style={{ marginTop: 10 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif', marginBottom: 6 }}>
+                  {askResult.recipeName}
+                </div>
+                {askResult.ingredients.map((ing, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '0.5px solid rgba(0,0,0,0.05)', fontSize: 10, fontFamily: 'Epilogue, sans-serif' }}>
+                    <span style={{ color: 'var(--text)' }}>{ing.item}</span>
+                    <span style={{ color: 'var(--muted)' }}>{ing.amount}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <BottomNav />

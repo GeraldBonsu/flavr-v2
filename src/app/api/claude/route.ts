@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { generateRecipe, generateMealPlan } from '@/lib/claude/recipes'
+import { generateRecipe, generateMealPlan, lookupRecipeIngredients } from '@/lib/claude/recipes'
 import { lookupIngredient, analyzeIngredientsFromImage } from '@/lib/claude/ingredients'
 
 export async function POST(request: Request) {
@@ -42,6 +42,10 @@ export async function POST(request: Request) {
           body.base64 as string,
           body.mediaType as string
         )
+        return NextResponse.json(result)
+      }
+      case 'lookupRecipeIngredients': {
+        const result = await lookupRecipeIngredients(body.recipeName as string)
         return NextResponse.json(result)
       }
       default:

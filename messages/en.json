@@ -46,7 +46,11 @@
     "loved_it": "👍 Loved it",
     "not_for_me": "👎 Not for me",
     "start_cooking": "Start cooking →",
-    "generate_new": "Generate a new recipe"
+    "generate_new": "Generate a new recipe",
+    "generate_another": "Generate another →",
+    "change_ingredients": "Change ingredients",
+    "whats_needed": "What you'll need",
+    "all_set": "All set!"
   },
   "generating": {
     "title": "Creating your recipe…",

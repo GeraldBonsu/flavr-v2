@@ -103,3 +103,23 @@ Return ONLY this JSON (no markdown):
   const text = msg.content[0]?.type === 'text' ? msg.content[0].text : ''
   return parseJSON<MealPlan>(text)
 }
+
+export interface RecipeShoppingList {
+  recipeName: string
+  ingredients: Array<{ item: string; amount: string }>
+}
+
+export async function lookupRecipeIngredients(recipeName: string): Promise<RecipeShoppingList> {
+  const msg = await client.messages.create({
+    model: MODEL,
+    max_tokens: 600,
+    system: 'You are a professional chef. Return ONLY valid JSON, no markdown, no extra text.',
+    messages: [{
+      role: 'user',
+      content: `Give me a shopping list for: "${recipeName}". Return ONLY this JSON:
+{"recipeName":"...","ingredients":[{"item":"...","amount":"..."}]}`,
+    }],
+  })
+  const text = msg.content[0]?.type === 'text' ? msg.content[0].text : ''
+  return parseJSON<RecipeShoppingList>(text)
+}
