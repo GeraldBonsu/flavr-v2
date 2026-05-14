@@ -25,10 +25,6 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set())
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const toggleItem = (i: number) =>
-    setCheckedItems(prev => { const s = new Set(prev); s.has(i) ? s.delete(i) : s.add(i); return s })
-  const allChecked = checkedItems.size === ingredients.length && ingredients.length > 0
-
   const handleGenerateAnother = () => {
     const items = ingredients.map(ing => ing.item).join(',')
     const params = new URLSearchParams({ ingredients: items, goal: recipe.goal ?? 'balanced' })
@@ -54,6 +50,9 @@ function RecipeInner({ recipe, existingFeedback }: { recipe: Recipe; existingFee
   }, [])
 
   const ingredients = (recipe.ingredients as unknown as Ingredient[]) ?? []
+  const toggleItem = (i: number) =>
+    setCheckedItems(prev => { const s = new Set(prev); s.has(i) ? s.delete(i) : s.add(i); return s })
+  const allChecked = checkedItems.size === ingredients.length && ingredients.length > 0
   const steps = recipe.steps ?? []
 
   return (
