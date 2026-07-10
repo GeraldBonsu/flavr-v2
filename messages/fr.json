@@ -187,6 +187,7 @@
     "upgrade_subtitle": "Recettes illimitées, guides PDF gratuits, et tout ce que nous ajoutons — £2,99/mois.",
     "upgrade_btn": "Passer à Premium — £2,99/mois →",
     "redirecting": "Redirection vers le paiement…",
+    "checkout_error": "Impossible de démarrer le paiement — réessayez",
     "welcome": "Bienvenue dans Premium !",
     "welcome_body": "Toutes les fonctionnalités sont débloquées.",
     "manage": "Gérer ou annuler le plan",

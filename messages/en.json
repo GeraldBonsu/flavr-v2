@@ -191,6 +191,7 @@
     "upgrade_subtitle": "Unlimited recipes, free PDF guides, and everything we add next — £2.99/month.",
     "upgrade_btn": "Upgrade to Premium — £2.99/mo →",
     "redirecting": "Redirecting to checkout…",
+    "checkout_error": "Could not start checkout — please try again",
     "welcome": "Welcome to Premium!",
     "welcome_body": "All features are now unlocked.",
     "manage": "Manage or cancel plan",

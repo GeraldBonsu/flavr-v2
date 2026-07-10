@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import BottomNav from '@/components/app/BottomNav'
@@ -59,8 +60,6 @@ const BUNDLE = {
   url: 'https://flavr-9927.myshopify.com/products/the-flavr-ultimate-bundle-3-cookbooks-for-everyday-cooking-health-performance?variant=57985769996675',
 }
 
-const PREMIUM_URL = 'https://flavr-9927.myshopify.com/products/flavr-premium-access?variant=57985938325891'
-
 export default function SubscriptionClient({ tier, name }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -68,6 +67,23 @@ export default function SubscriptionClient({ tier, name }: Props) {
   const justUpgraded = searchParams.get('upgraded') === 'true'
 
   const isPremium = tier === 'premium' || justUpgraded
+
+  const [checkingOut, setCheckingOut] = useState(false)
+  const [checkoutError, setCheckoutError] = useState(false)
+
+  const handleUpgrade = async () => {
+    setCheckingOut(true)
+    setCheckoutError(false)
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+      const data = await res.json() as { url?: string }
+      if (!res.ok || !data.url) throw new Error('checkout failed')
+      window.location.href = data.url
+    } catch {
+      setCheckoutError(true)
+      setCheckingOut(false)
+    }
+  }
 
   type FeatureKey = Parameters<typeof t>[0]
 
@@ -326,20 +342,28 @@ export default function SubscriptionClient({ tier, name }: Props) {
                 {t('upgrade_subtitle')}
               </div>
             </div>
-            <a
-              href={PREMIUM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => void handleUpgrade()}
+              disabled={checkingOut}
               style={{
-                display: 'block', textAlign: 'center',
+                display: 'block', width: '100%', textAlign: 'center',
                 padding: '13px', borderRadius: 'var(--r-pill)',
-                background: 'var(--accent)', color: '#fff',
+                background: 'var(--accent)', color: '#fff', border: 'none',
                 fontSize: 13, fontWeight: 500, fontFamily: 'Epilogue, sans-serif',
-                textDecoration: 'none',
+                cursor: checkingOut ? 'not-allowed' : 'pointer',
+                opacity: checkingOut ? 0.7 : 1,
               }}
             >
-              {t('upgrade_btn')}
-            </a>
+              {checkingOut ? t('redirecting') : t('upgrade_btn')}
+            </button>
+            {checkoutError && (
+              <p style={{
+                fontSize: 10.5, color: '#fff', fontFamily: 'Epilogue, sans-serif',
+                textAlign: 'center', margin: 0,
+              }}>
+                {t('checkout_error')}
+              </p>
+            )}
           </div>
         )}
 
