@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { generateRecipe, generateMealPlan, lookupRecipeIngredients } from '@/lib/claude/recipes'
 import { lookupIngredient, analyzeIngredientsFromImage } from '@/lib/claude/ingredients'
+import { estimateMealFromImage, estimateMealFromText } from '@/lib/claude/nutrition'
+import { requirePremiumApi } from '@/lib/subscription/requirePremium'
 
 export async function POST(request: Request) {
   // Verify auth
@@ -46,6 +48,22 @@ export async function POST(request: Request) {
       }
       case 'lookupRecipeIngredients': {
         const result = await lookupRecipeIngredients(body.recipeName as string)
+        return NextResponse.json(result)
+      }
+      case 'estimateMealFromImage': {
+        const gate = await requirePremiumApi(user.id)
+        if (gate) return gate
+        const result = await estimateMealFromImage(
+          body.base64 as string,
+          body.mediaType as string,
+          body.textHint as string | undefined
+        )
+        return NextResponse.json(result)
+      }
+      case 'estimateMealFromText': {
+        const gate = await requirePremiumApi(user.id)
+        if (gate) return gate
+        const result = await estimateMealFromText(body.description as string)
         return NextResponse.json(result)
       }
       default:

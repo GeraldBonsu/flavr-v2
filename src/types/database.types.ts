@@ -24,6 +24,12 @@ export type Database = {
           height_cm: number | null
           activity_level: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' | null
           target_calories: number | null
+          target_protein_g: number | null
+          target_carbs_g: number | null
+          target_fat_g: number | null
+          estimated_tdee: number | null
+          expenditure_updated_at: string | null
+          expenditure_confidence: 'seed' | 'low' | 'medium' | 'high' | null
           dietary_restrictions: string[] | null
           cultural_preferences: string[] | null
           subscription_tier: 'free' | 'premium'
@@ -48,6 +54,12 @@ export type Database = {
           height_cm?: number | null
           activity_level?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' | null
           target_calories?: number | null
+          target_protein_g?: number | null
+          target_carbs_g?: number | null
+          target_fat_g?: number | null
+          estimated_tdee?: number | null
+          expenditure_updated_at?: string | null
+          expenditure_confidence?: 'seed' | 'low' | 'medium' | 'high' | null
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
@@ -72,6 +84,12 @@ export type Database = {
           height_cm?: number | null
           activity_level?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' | null
           target_calories?: number | null
+          target_protein_g?: number | null
+          target_carbs_g?: number | null
+          target_fat_g?: number | null
+          estimated_tdee?: number | null
+          expenditure_updated_at?: string | null
+          expenditure_confidence?: 'seed' | 'low' | 'medium' | 'high' | null
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
@@ -243,6 +261,116 @@ export type Database = {
           name?: string
           email?: string
           message?: string
+        }
+        Relationships: []
+      }
+      weight_logs: {
+        Row: {
+          id: string
+          user_id: string
+          weight_kg: number
+          logged_at: string
+          note: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          weight_kg: number
+          logged_at?: string
+          note?: string | null
+          created_at?: string
+        }
+        Update: {
+          weight_kg?: number
+          logged_at?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
+      meal_logs: {
+        Row: {
+          id: string
+          user_id: string
+          logged_at: string
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          name: string
+          calories: number
+          protein_g: number
+          carbs_g: number
+          fat_g: number
+          source: 'manual' | 'photo' | 'recipe'
+          recipe_id: string | null
+          items: Json | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          logged_at?: string
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          name: string
+          calories: number
+          protein_g?: number
+          carbs_g?: number
+          fat_g?: number
+          source: 'manual' | 'photo' | 'recipe'
+          recipe_id?: string | null
+          items?: Json | null
+          created_at?: string
+        }
+        Update: {
+          logged_at?: string
+          meal_type?: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          name?: string
+          calories?: number
+          protein_g?: number
+          carbs_g?: number
+          fat_g?: number
+          source?: 'manual' | 'photo' | 'recipe'
+          recipe_id?: string | null
+          items?: Json | null
+        }
+        Relationships: []
+      }
+      expenditure_history: {
+        Row: {
+          id: string
+          user_id: string
+          week_start: string
+          estimated_tdee: number
+          target_calories: number
+          target_protein_g: number
+          target_carbs_g: number
+          target_fat_g: number
+          data_points: number
+          confidence: 'seed' | 'low' | 'medium' | 'high'
+          method: 'seed_mifflin' | 'trend_14d' | 'trend_7d'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          week_start: string
+          estimated_tdee: number
+          target_calories: number
+          target_protein_g: number
+          target_carbs_g: number
+          target_fat_g: number
+          data_points: number
+          confidence: 'seed' | 'low' | 'medium' | 'high'
+          method: 'seed_mifflin' | 'trend_14d' | 'trend_7d'
+          created_at?: string
+        }
+        Update: {
+          estimated_tdee?: number
+          target_calories?: number
+          target_protein_g?: number
+          target_carbs_g?: number
+          target_fat_g?: number
+          data_points?: number
+          confidence?: 'seed' | 'low' | 'medium' | 'high'
+          method?: 'seed_mifflin' | 'trend_14d' | 'trend_7d'
         }
         Relationships: []
       }

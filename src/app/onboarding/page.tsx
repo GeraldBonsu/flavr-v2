@@ -6,26 +6,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics/client'
+import { calcTDEE, type ActivityLevel } from '@/lib/nutrition/tdee'
 
 type Intent = 'eat_better' | 'fitness_goal' | 'explore_culture' | 'casual'
 type FitnessGoal = 'lose_weight' | 'gain_muscle' | 'maintain' | 'recomp'
-type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active'
-
-const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
-  sedentary: 1.2,
-  light:     1.375,
-  moderate:  1.55,
-  active:    1.725,
-  very_active: 1.9,
-}
-
-function calcTDEE(weight: number, height: number, age: number, activity: ActivityLevel): number {
-  // Mifflin-St Jeor (gender-neutral: average of male+female)
-  const bmrMale   = 10 * weight + 6.25 * height - 5 * age + 5
-  const bmrFemale = 10 * weight + 6.25 * height - 5 * age - 161
-  const bmr = (bmrMale + bmrFemale) / 2
-  return Math.round(bmr * ACTIVITY_MULTIPLIERS[activity])
-}
 
 const DIETARY_OPTIONS = [
   'Halal', 'Vegan', 'Vegetarian', 'Gluten-free',

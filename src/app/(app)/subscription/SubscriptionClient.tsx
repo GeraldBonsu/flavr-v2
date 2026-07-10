@@ -10,23 +10,25 @@ interface Props {
 }
 
 const FREE_FEATURE_KEYS = [
-  { key: 'feature_ai',        included: true },
-  { key: 'feature_save',      included: true },
-  { key: 'feature_pantry',    included: true },
-  { key: 'feature_5day',      included: true },
-  { key: 'feature_unlimited', included: false },
-  { key: 'feature_pdf',       included: false },
-  { key: 'feature_meal_plan', included: false },
-  { key: 'feature_support',   included: false },
+  { key: 'feature_ai',                included: true },
+  { key: 'feature_save',              included: true },
+  { key: 'feature_pantry',            included: true },
+  { key: 'feature_5day',              included: true },
+  { key: 'feature_unlimited',         included: false },
+  { key: 'feature_pdf',               included: false },
+  { key: 'feature_meal_plan',         included: false },
+  { key: 'feature_calorie_tracking',  included: false },
+  { key: 'feature_support',           included: false },
 ] as const
 
 const PREMIUM_FEATURE_KEYS = [
-  { key: 'feature_everything', included: true },
-  { key: 'feature_unlimited',  included: true },
-  { key: 'feature_pdf',        included: true },
-  { key: 'feature_meal_plan',  included: true },
-  { key: 'feature_support',    included: true },
-  { key: 'feature_early',      included: true },
+  { key: 'feature_everything',        included: true },
+  { key: 'feature_unlimited',         included: true },
+  { key: 'feature_pdf',               included: true },
+  { key: 'feature_meal_plan',         included: true },
+  { key: 'feature_calorie_tracking',  included: true },
+  { key: 'feature_support',           included: true },
+  { key: 'feature_early',             included: true },
 ] as const
 
 const GUIDES_PREVIEW = [

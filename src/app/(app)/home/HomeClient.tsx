@@ -7,6 +7,7 @@ import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
 import { trackEvent } from '@/lib/analytics/client'
+import { readFileAsBase64 } from '@/lib/media/base64'
 import type { RecipeShoppingList } from '@/lib/claude/recipes'
 
 // Browser speech recognition — not in all TypeScript DOM libs
@@ -364,18 +365,6 @@ function getGreetingKey(): 'greeting_morning' | 'greeting_afternoon' | 'greeting
   if (h < 12) return 'greeting_morning'
   if (h < 17) return 'greeting_afternoon'
   return 'greeting_evening'
-}
-
-function readFileAsBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = e => {
-      const result = (e.target?.result as string) ?? ''
-      resolve(result.split(',')[1] ?? '')
-    }
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
 }
 
 function MicIcon({ active }: { active: boolean }) {
