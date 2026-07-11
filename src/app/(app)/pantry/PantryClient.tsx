@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
+import { resizeImageToBase64 } from '@/lib/media/base64'
 
 type Category = 'fridge' | 'cupboard' | 'spices'
 
@@ -99,25 +100,19 @@ export default function PantryClient({ userId, initialItems }: Props) {
     if (!file) return
     setScanning(true)
     try {
-      const reader = new FileReader()
-      reader.onload = async () => {
-        const base64 = (reader.result as string).split(',')[1] ?? ''
-        const mediaType = file.type
-        const res = await fetch('/api/claude', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'analyzeImage', base64, mediaType }),
-        })
-        const data = await res.json() as { ingredients?: string[] }
-        if (data.ingredients) {
-          for (const ing of data.ingredients) {
-            await addItem(ing, inferCategory(ing))
-          }
+      const { base64, mediaType } = await resizeImageToBase64(file)
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'analyzeImage', base64, mediaType }),
+      })
+      const data = await res.json() as { ingredients?: string[] }
+      if (data.ingredients) {
+        for (const ing of data.ingredients) {
+          await addItem(ing, inferCategory(ing))
         }
-        setScanning(false)
       }
-      reader.readAsDataURL(file)
-    } catch {
+    } finally {
       setScanning(false)
     }
   }

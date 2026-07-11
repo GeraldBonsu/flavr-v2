@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { readFileAsBase64 } from '@/lib/media/base64'
+import { resizeImageToBase64 } from '@/lib/media/base64'
 import MealEstimateReview from './MealEstimateReview'
 import type { MealEstimate, MealLog } from './types'
 
@@ -25,11 +25,11 @@ export default function PhotoLogFlow({ userId, onLogged, onClose }: Props) {
     setAnalyzing(true)
     setError(false)
     try {
-      const base64 = await readFileAsBase64(file)
+      const { base64, mediaType } = await resizeImageToBase64(file)
       const res = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'estimateMealFromImage', base64, mediaType: file.type || 'image/jpeg' }),
+        body: JSON.stringify({ action: 'estimateMealFromImage', base64, mediaType }),
       })
       if (!res.ok) throw new Error('estimate failed')
       const data = await res.json() as MealEstimate

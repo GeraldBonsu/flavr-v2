@@ -7,7 +7,7 @@ import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
 import { trackEvent } from '@/lib/analytics/client'
-import { readFileAsBase64 } from '@/lib/media/base64'
+import { resizeImageToBase64 } from '@/lib/media/base64'
 import type { RecipeShoppingList } from '@/lib/claude/recipes'
 
 // Browser speech recognition — not in all TypeScript DOM libs
@@ -117,11 +117,11 @@ function HomeInner({ profile }: { profile: Profile | null }) {
   const processFile = useCallback(async (file: File) => {
     setAnalyzingImage(true)
     try {
-      const base64 = await readFileAsBase64(file)
+      const { base64, mediaType } = await resizeImageToBase64(file)
       const res = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'analyzeImage', base64, mediaType: file.type || 'image/jpeg' }),
+        body: JSON.stringify({ action: 'analyzeImage', base64, mediaType }),
       })
       const found = await res.json() as string[]
       if (!Array.isArray(found) || found.length === 0) {
