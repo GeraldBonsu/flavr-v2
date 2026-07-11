@@ -97,6 +97,8 @@
     "retry": "Reintentar",
     "cancel": "Cancelar",
     "review_title": "Revisar y editar",
+    "review_subtitle": "Revisa cada elemento — edita lo que esté mal o falte antes de registrar.",
+    "low_confidence_warning": "Este fue difícil de estimar — por favor revisa los detalles a continuación.",
     "item_name_placeholder": "Alimento",
     "quantity_label": "Cantidad",
     "add_item": "+ Añadir alimento",

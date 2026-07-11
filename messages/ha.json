@@ -97,6 +97,8 @@
     "retry": "Sake gwadawa",
     "cancel": "Soke",
     "review_title": "Duba kuma gyara",
+    "review_subtitle": "Duba kowane abu — gyara duk abin da ba daidai ba ko wanda ya ɓace kafin yin rijista.",
+    "low_confidence_warning": "Wannan yana da wahalar ƙididdigewa — don Allah duba bayanan da ke ƙasa.",
     "item_name_placeholder": "Abincin",
     "quantity_label": "Yawa",
     "add_item": "+ Ƙara abu",

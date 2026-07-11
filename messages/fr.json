@@ -97,6 +97,8 @@
     "retry": "Réessayer",
     "cancel": "Annuler",
     "review_title": "Vérifier et modifier",
+    "review_subtitle": "Vérifiez chaque élément — modifiez tout ce qui est faux ou manquant avant d'enregistrer.",
+    "low_confidence_warning": "Celui-ci était difficile à estimer — merci de vérifier les détails ci-dessous.",
     "item_name_placeholder": "Aliment",
     "quantity_label": "Quantité",
     "add_item": "+ Ajouter un aliment",

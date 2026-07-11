@@ -101,6 +101,8 @@
     "retry": "Try again",
     "cancel": "Cancel",
     "review_title": "Review & edit",
+    "review_subtitle": "Check each item — edit anything that's wrong or missing before logging.",
+    "low_confidence_warning": "This one was tricky to estimate — please double check the details below.",
     "item_name_placeholder": "Food item",
     "quantity_label": "Quantity",
     "add_item": "+ Add item",

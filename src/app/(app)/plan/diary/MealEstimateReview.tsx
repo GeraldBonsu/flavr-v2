@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import { trackEvent } from '@/lib/analytics/client'
 import { inferMealType } from './utils'
 import type { Json } from '@/types/database.types'
 import type { MealEstimate, MealItem, MealLog, MealType } from './types'
@@ -24,6 +25,24 @@ function sumItems(items: MealItem[]) {
     carbs_g: acc.carbs_g + item.carbs_g,
     fat_g: acc.fat_g + item.fat_g,
   }), { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 })
+}
+
+function diffFromEstimate(original: MealItem[], edited: MealItem[]) {
+  const itemsAdded = Math.max(0, edited.length - original.length)
+  const itemsRemoved = Math.max(0, original.length - edited.length)
+  const overlap = Math.min(original.length, edited.length)
+  let itemsChanged = 0
+  for (let i = 0; i < overlap; i++) {
+    const o = original[i]!
+    const e = edited[i]!
+    if (
+      o.name !== e.name || o.quantity !== e.quantity || o.calories !== e.calories ||
+      o.protein_g !== e.protein_g || o.carbs_g !== e.carbs_g || o.fat_g !== e.fat_g
+    ) {
+      itemsChanged++
+    }
+  }
+  return { itemsAdded, itemsRemoved, itemsChanged, edited: itemsAdded > 0 || itemsRemoved > 0 || itemsChanged > 0 }
 }
 
 export default function MealEstimateReview({ userId, estimate, source, onConfirm, onCancel }: Props) {
@@ -48,6 +67,12 @@ export default function MealEstimateReview({ userId, estimate, source, onConfirm
 
   const handleConfirm = async () => {
     setSaving(true)
+    const diff = diffFromEstimate(estimate.items, items)
+    void trackEvent('meal_estimate_reviewed', {
+      source,
+      confidence: estimate.confidence,
+      ...diff,
+    })
     const supabase = createClient()
     const { data, error } = await supabase
       .from('meal_logs')
@@ -85,6 +110,17 @@ export default function MealEstimateReview({ userId, estimate, source, onConfirm
           </div>
           <button onClick={onCancel} style={{ background: 'none', border: 'none', fontSize: 16, color: 'var(--muted)', cursor: 'pointer', padding: 4 }}>✕</button>
         </div>
+        <div style={{ fontSize: 10.5, color: 'var(--muted)', marginBottom: 12 }}>
+          {t('review_subtitle')}
+        </div>
+        {estimate.confidence === 'low' && (
+          <div style={{
+            background: 'var(--warn-bg)', borderRadius: 'var(--r-xs)', padding: '10px 14px',
+            marginBottom: 12, fontSize: 11, color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif',
+          }}>
+            {t('low_confidence_warning')}
+          </div>
+        )}
         {estimate.notes && (
           <div style={{ fontSize: 10.5, color: 'var(--muted)', fontStyle: 'italic', marginBottom: 12 }}>{estimate.notes}</div>
         )}

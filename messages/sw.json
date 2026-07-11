@@ -97,6 +97,8 @@
     "retry": "Jaribu tena",
     "cancel": "Ghairi",
     "review_title": "Kagua na hariri",
+    "review_subtitle": "Kagua kila kipengele — hariri chochote kilichokosewa au kinachokosekana kabla ya kurekodi.",
+    "low_confidence_warning": "Hii ilikuwa ngumu kukadiria — tafadhali kagua maelezo hapa chini.",
     "item_name_placeholder": "Kipengele cha chakula",
     "quantity_label": "Kiasi",
     "add_item": "+ Ongeza kipengele",

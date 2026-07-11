@@ -97,6 +97,8 @@
     "retry": "إعادة المحاولة",
     "cancel": "إلغاء",
     "review_title": "مراجعة وتعديل",
+    "review_subtitle": "راجع كل عنصر — عدّل أي شيء خاطئ أو ناقص قبل التسجيل.",
+    "low_confidence_warning": "كان تقدير هذه الوجبة صعبًا — يرجى التحقق من التفاصيل أدناه.",
     "item_name_placeholder": "عنصر الطعام",
     "quantity_label": "الكمية",
     "add_item": "+ إضافة عنصر",
