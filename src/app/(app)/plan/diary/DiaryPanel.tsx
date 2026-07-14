@@ -150,8 +150,8 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
         <div className="serif" style={{ fontSize: 15, color: 'var(--text)' }}>{dateLabel}</div>
         <button
           onClick={() => setSelectedDate(d => addDaysISO(d, 1))}
-          disabled={isSameOrFutureDay(addDaysISO(selectedDate, 1))}
-          style={{ background: 'none', border: 'none', fontSize: 14, color: 'var(--muted)', cursor: 'pointer', padding: 4, opacity: isSameOrFutureDay(addDaysISO(selectedDate, 1)) ? 0.3 : 1 }}
+          disabled={isSameOrFutureDay(selectedDate)}
+          style={{ background: 'none', border: 'none', fontSize: 14, color: 'var(--muted)', cursor: 'pointer', padding: 4, opacity: isSameOrFutureDay(selectedDate) ? 0.3 : 1 }}
         >
           ›
         </button>
