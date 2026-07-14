@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { parseGrams } from '@/lib/nutrition/parseGrams'
-import { inferMealType } from './utils'
+import { inferMealType, loggedAtForDate, todayISODate } from './utils'
 import type { Json } from '@/types/database.types'
 import type { MealLog, MealType } from './types'
 
 interface Props {
   userId: string
+  loggedAtDate: string
   onLogged: (log: MealLog) => void
   onClose: () => void
 }
@@ -26,11 +27,11 @@ interface SavedRecipe {
 
 const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
 
-export default function RecipePickerFlow({ userId, onLogged, onClose }: Props) {
+export default function RecipePickerFlow({ userId, loggedAtDate, onLogged, onClose }: Props) {
   const t = useTranslations('diary')
   const [recipes, setRecipes] = useState<SavedRecipe[] | null>(null)
   const [selected, setSelected] = useState<SavedRecipe | null>(null)
-  const [mealType, setMealType] = useState<MealType>(inferMealType())
+  const [mealType, setMealType] = useState<MealType>(loggedAtDate === todayISODate() ? inferMealType() : 'breakfast')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function RecipePickerFlow({ userId, onLogged, onClose }: Props) {
       .from('meal_logs')
       .insert({
         user_id: userId,
+        logged_at: loggedAtForDate(loggedAtDate),
         meal_type: mealType,
         name: selected.name,
         calories,

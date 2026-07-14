@@ -114,7 +114,12 @@
     "no_target_set": "Configura tus objetivos para empezar a registrar",
     "premium_headline": "Controla comidas y calorías",
     "premium_body": "Registra comidas, toma fotos para estimaciones instantáneas, y deja que flavr adapte tus objetivos automáticamente.",
-    "premium_cta": "Desbloquear con Premium →"
+    "premium_cta": "Desbloquear con Premium →",
+    "mode_remaining": "Restante",
+    "mode_consumed": "Consumido",
+    "of_target_kcal": "de {target} kcal",
+    "edit_meal_title": "Editar comida",
+    "save_changes": "Guardar cambios"
   },
   "account": {
     "your_profile": "Tu perfil",

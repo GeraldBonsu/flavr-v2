@@ -5,10 +5,12 @@ import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import CalorieRing from '@/components/app/CalorieRing'
 import MacroBars from '@/components/app/MacroBars'
+import SegmentedControl from '@/components/app/SegmentedControl'
 import { useToast } from '@/components/app/Toast'
 import TargetsSetupModal from './TargetsSetupModal'
 import WeightLogPrompt from './WeightLogPrompt'
 import MealEntrySheet from './MealEntrySheet'
+import EditMealLogModal from './EditMealLogModal'
 import UpsellCard from './UpsellCard'
 import { todayISODate, addDaysISO, isSameOrFutureDay } from './utils'
 import type { DiaryProfile, MealLog, MealType } from './types'
@@ -33,6 +35,7 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
   const [showTargetsModal, setShowTargetsModal] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [hasRecentWeight, setHasRecentWeight] = useState<boolean | null>(null)
+  const [editingLog, setEditingLog] = useState<MealLog | null>(null)
 
   const isPremium = profile.subscription_tier === 'premium'
   const hasTargets = profile.age != null && profile.weight_kg != null && profile.height_cm != null && profile.activity_level != null
@@ -107,6 +110,18 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
     showToast(t('meal_logged'))
   }
 
+  const handleEdited = (updated: MealLog) => {
+    setEditingLog(null)
+    setLogs(prev => prev.map(l => l.id === updated.id ? updated : l))
+  }
+
+  const handleModeChange = (mode: string) => {
+    const calorieDisplayMode = mode as 'remaining' | 'consumed'
+    setProfile(prev => ({ ...prev, calorie_display_mode: calorieDisplayMode }))
+    const supabase = createClient()
+    void supabase.from('profiles').update({ calorie_display_mode: calorieDisplayMode }).eq('id', userId)
+  }
+
   const dateLabel = selectedDate === todayISODate()
     ? t('today')
     : selectedDate === addDaysISO(todayISODate(), -1)
@@ -148,13 +163,28 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
           <button className="btn-dark" onClick={() => setShowTargetsModal(true)}>{t('setup_targets_title')}</button>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 'var(--r-card)', padding: '14px', display: 'flex', gap: 14, alignItems: 'center' }}>
-          <CalorieRing consumed={totals.calories} target={profile.target_calories ?? 0} />
-          <MacroBars items={[
-            { label: t('protein'), consumed: totals.protein_g, target: profile.target_protein_g ?? 0 },
-            { label: t('carbs'), consumed: totals.carbs_g, target: profile.target_carbs_g ?? 0 },
-            { label: t('fat'), consumed: totals.fat_g, target: profile.target_fat_g ?? 0 },
-          ]} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 'var(--r-card)', padding: '14px', display: 'flex', gap: 14, alignItems: 'center' }}>
+            <CalorieRing
+              consumed={totals.calories}
+              target={profile.target_calories ?? 0}
+              mode={profile.calorie_display_mode}
+              targetCaption={t('of_target_kcal', { target: profile.target_calories ?? 0 })}
+            />
+            <MacroBars items={[
+              { label: t('protein'), consumed: totals.protein_g, target: profile.target_protein_g ?? 0 },
+              { label: t('carbs'), consumed: totals.carbs_g, target: profile.target_carbs_g ?? 0 },
+              { label: t('fat'), consumed: totals.fat_g, target: profile.target_fat_g ?? 0 },
+            ]} />
+          </div>
+          <SegmentedControl
+            options={[
+              { value: 'remaining', label: t('mode_remaining') },
+              { value: 'consumed', label: t('mode_consumed') },
+            ]}
+            value={profile.calorie_display_mode}
+            onChange={handleModeChange}
+          />
         </div>
       )}
 
@@ -175,10 +205,15 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {group.items.map(item => (
-                <div key={item.id} style={{
-                  background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 10,
-                  padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                }}>
+                <div
+                  key={item.id}
+                  onClick={() => setEditingLog(item)}
+                  style={{
+                    background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 10,
+                    padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
                   <div>
                     <div style={{ fontSize: 11.5, fontWeight: 500, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>{item.name}</div>
                     <div style={{ fontSize: 9.5, color: 'var(--muted)', fontFamily: 'JetBrains Mono, monospace', marginTop: 2 }}>
@@ -186,7 +221,7 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
                     </div>
                   </div>
                   <button
-                    onClick={() => void handleDelete(item.id)}
+                    onClick={e => { e.stopPropagation(); void handleDelete(item.id) }}
                     style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 13, padding: 4 }}
                   >
                     ✕
@@ -219,7 +254,11 @@ export default function DiaryPanel({ profile: initialProfile, userId }: Props) {
       )}
 
       {sheetOpen && (
-        <MealEntrySheet userId={userId} onLogged={handleLogged} onClose={() => setSheetOpen(false)} />
+        <MealEntrySheet userId={userId} loggedAtDate={selectedDate} onLogged={handleLogged} onClose={() => setSheetOpen(false)} />
+      )}
+
+      {editingLog && (
+        <EditMealLogModal existingLog={editingLog} onSaved={handleEdited} onCancel={() => setEditingLog(null)} />
       )}
     </div>
   )

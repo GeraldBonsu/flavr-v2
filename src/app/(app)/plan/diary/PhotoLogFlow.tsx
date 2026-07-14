@@ -8,11 +8,12 @@ import type { MealEstimate, MealLog } from './types'
 
 interface Props {
   userId: string
+  loggedAtDate: string
   onLogged: (log: MealLog) => void
   onClose: () => void
 }
 
-export default function PhotoLogFlow({ userId, onLogged, onClose }: Props) {
+export default function PhotoLogFlow({ userId, loggedAtDate, onLogged, onClose }: Props) {
   const t = useTranslations('diary')
   const fileRef = useRef<HTMLInputElement>(null)
   const [analyzing, setAnalyzing] = useState(false)
@@ -48,6 +49,7 @@ export default function PhotoLogFlow({ userId, onLogged, onClose }: Props) {
         userId={userId}
         estimate={estimate}
         source="photo"
+        loggedAtDate={loggedAtDate}
         onConfirm={onLogged}
         onCancel={onClose}
       />

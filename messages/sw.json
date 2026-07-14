@@ -114,7 +114,12 @@
     "no_target_set": "Weka malengo yako kuanza kufuatilia",
     "premium_headline": "Fuatilia milo na kalori",
     "premium_body": "Rekodi milo, piga picha kwa makadirio ya papo hapo, na uruhusu flavr kurekebisha malengo yako kiotomatiki.",
-    "premium_cta": "Fungua na Premium →"
+    "premium_cta": "Fungua na Premium →",
+    "mode_remaining": "Zilizobaki",
+    "mode_consumed": "Zilizoliwa",
+    "of_target_kcal": "kati ya {target} kcal",
+    "edit_meal_title": "Hariri mlo",
+    "save_changes": "Hifadhi mabadiliko"
   },
   "account": {
     "your_profile": "Wasifu wako",

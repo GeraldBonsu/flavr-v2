@@ -7,11 +7,12 @@ import type { MealEstimate, MealLog } from './types'
 
 interface Props {
   userId: string
+  loggedAtDate: string
   onLogged: (log: MealLog) => void
   onClose: () => void
 }
 
-export default function DescribeLogFlow({ userId, onLogged, onClose }: Props) {
+export default function DescribeLogFlow({ userId, loggedAtDate, onLogged, onClose }: Props) {
   const t = useTranslations('diary')
   const [description, setDescription] = useState('')
   const [analyzing, setAnalyzing] = useState(false)
@@ -44,6 +45,7 @@ export default function DescribeLogFlow({ userId, onLogged, onClose }: Props) {
         userId={userId}
         estimate={estimate}
         source="manual"
+        loggedAtDate={loggedAtDate}
         onConfirm={onLogged}
         onCancel={onClose}
       />

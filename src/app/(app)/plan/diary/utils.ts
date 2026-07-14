@@ -21,3 +21,9 @@ export function addDaysISO(dateISO: string, days: number): string {
 export function isSameOrFutureDay(dateISO: string): boolean {
   return dateISO >= todayISODate()
 }
+
+/** Combines a calendar date with the current wall-clock time so backfilled
+ * entries land on the right day while keeping a sensible ordering timestamp. */
+export function loggedAtForDate(dateISO: string): string {
+  return `${dateISO}T${new Date().toISOString().slice(11)}`
+}

@@ -114,7 +114,12 @@
     "no_target_set": "Configurez vos objectifs pour commencer le suivi",
     "premium_headline": "Suivez repas et calories",
     "premium_body": "Enregistrez vos repas, prenez des photos pour des estimations instantanées, et laissez flavr adapter vos objectifs automatiquement.",
-    "premium_cta": "Débloquer avec Premium →"
+    "premium_cta": "Débloquer avec Premium →",
+    "mode_remaining": "Restant",
+    "mode_consumed": "Consommé",
+    "of_target_kcal": "sur {target} kcal",
+    "edit_meal_title": "Modifier le repas",
+    "save_changes": "Enregistrer les modifications"
   },
   "account": {
     "your_profile": "Votre profil",

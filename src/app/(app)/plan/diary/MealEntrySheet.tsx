@@ -9,24 +9,25 @@ import type { MealLog } from './types'
 
 interface Props {
   userId: string
+  loggedAtDate: string
   onLogged: (log: MealLog) => void
   onClose: () => void
 }
 
 type Flow = 'photo' | 'describe' | 'recipe' | null
 
-export default function MealEntrySheet({ userId, onLogged, onClose }: Props) {
+export default function MealEntrySheet({ userId, loggedAtDate, onLogged, onClose }: Props) {
   const t = useTranslations('diary')
   const [flow, setFlow] = useState<Flow>(null)
 
   if (flow === 'photo') {
-    return <PhotoLogFlow userId={userId} onLogged={onLogged} onClose={() => setFlow(null)} />
+    return <PhotoLogFlow userId={userId} loggedAtDate={loggedAtDate} onLogged={onLogged} onClose={() => setFlow(null)} />
   }
   if (flow === 'describe') {
-    return <DescribeLogFlow userId={userId} onLogged={onLogged} onClose={() => setFlow(null)} />
+    return <DescribeLogFlow userId={userId} loggedAtDate={loggedAtDate} onLogged={onLogged} onClose={() => setFlow(null)} />
   }
   if (flow === 'recipe') {
-    return <RecipePickerFlow userId={userId} onLogged={onLogged} onClose={() => setFlow(null)} />
+    return <RecipePickerFlow userId={userId} loggedAtDate={loggedAtDate} onLogged={onLogged} onClose={() => setFlow(null)} />
   }
 
   return (

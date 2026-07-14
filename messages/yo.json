@@ -114,7 +114,12 @@
     "no_target_set": "Ṣètò àfojúsùn rẹ láti bẹ̀rẹ̀ ìtọpinpin",
     "premium_headline": "Tọpinpin oúnjẹ àti kalori",
     "premium_body": "Kọ oúnjẹ sílẹ̀, ya fọ́tò fún ìdíwọ̀n kánkán, kí o sì jẹ́ kí flavr ṣàtúnṣe àfojúsùn rẹ láifọwọ́wọ́.",
-    "premium_cta": "Ṣí i sílẹ̀ pẹ̀lú Premium →"
+    "premium_cta": "Ṣí i sílẹ̀ pẹ̀lú Premium →",
+    "mode_remaining": "Ìyókù",
+    "mode_consumed": "Tí a jẹ",
+    "of_target_kcal": "nínú {target} kcal",
+    "edit_meal_title": "Ṣàtúnṣe oúnjẹ",
+    "save_changes": "Fi àwọn àyípadà pamọ́"
   },
   "account": {
     "your_profile": "Profaìlì rẹ",

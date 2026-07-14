@@ -33,6 +33,7 @@ export type Database = {
           dietary_restrictions: string[] | null
           cultural_preferences: string[] | null
           subscription_tier: 'free' | 'premium'
+          calorie_display_mode: 'remaining' | 'consumed'
           notification_preferences: Json
           language: string
           onboarding_completed_at: string | null
@@ -63,6 +64,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          calorie_display_mode?: 'remaining' | 'consumed'
           notification_preferences?: Json
           language?: string
           onboarding_completed_at?: string | null
@@ -93,6 +95,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          calorie_display_mode?: 'remaining' | 'consumed'
           notification_preferences?: Json
           language?: string
           onboarding_completed_at?: string | null

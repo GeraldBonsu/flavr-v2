@@ -118,7 +118,12 @@
     "no_target_set": "Set up your targets to start tracking",
     "premium_headline": "Track meals & calories",
     "premium_body": "Log meals, snap photos for instant estimates, and let flavr adapt your targets automatically.",
-    "premium_cta": "Unlock with Premium →"
+    "premium_cta": "Unlock with Premium →",
+    "mode_remaining": "Remaining",
+    "mode_consumed": "Consumed",
+    "of_target_kcal": "of {target} kcal",
+    "edit_meal_title": "Edit meal",
+    "save_changes": "Save changes"
   },
   "account": {
     "your_profile": "Your profile",

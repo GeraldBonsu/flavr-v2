@@ -14,6 +14,7 @@ export interface DiaryProfile {
   estimated_tdee: number | null
   expenditure_updated_at: string | null
   subscription_tier: 'free' | 'premium'
+  calorie_display_mode: 'remaining' | 'consumed'
 }
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'

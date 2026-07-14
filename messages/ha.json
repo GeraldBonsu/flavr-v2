@@ -114,7 +114,12 @@
     "no_target_set": "Tsara manufofinku don fara bibiya",
     "premium_headline": "Bi diddigin abinci da kuzari",
     "premium_body": "Rubuta abinci, ɗauki hotuna don kiyasin nan take, kuma bari flavr ya daidaita manufofinku ta atomatik.",
-    "premium_cta": "Buɗe da Premium →"
+    "premium_cta": "Buɗe da Premium →",
+    "mode_remaining": "Ragowar",
+    "mode_consumed": "Da aka ci",
+    "of_target_kcal": "na {target} kcal",
+    "edit_meal_title": "Gyara abinci",
+    "save_changes": "Ajiye canje-canje"
   },
   "account": {
     "your_profile": "Bayanin ku",

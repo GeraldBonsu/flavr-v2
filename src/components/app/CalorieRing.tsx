@@ -3,11 +3,13 @@
 interface Props {
   consumed: number
   target: number
+  mode: 'remaining' | 'consumed'
+  targetCaption: string
   size?: number
   strokeWidth?: number
 }
 
-export default function CalorieRing({ consumed, target, size = 116, strokeWidth = 10 }: Props) {
+export default function CalorieRing({ consumed, target, mode, targetCaption, size = 116, strokeWidth = 10 }: Props) {
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
   const ratio = target > 0 ? consumed / target : 0
@@ -15,6 +17,7 @@ export default function CalorieRing({ consumed, target, size = 116, strokeWidth 
   const over = ratio > 1
   const offset = circumference * (1 - clamped)
   const remaining = target - consumed
+  const displayValue = mode === 'consumed' ? Math.round(consumed) : Math.round(Math.abs(remaining))
 
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
@@ -38,11 +41,14 @@ export default function CalorieRing({ consumed, target, size = 116, strokeWidth 
         position: 'absolute', inset: 0,
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       }}>
-        <div style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 600, color: over ? 'var(--accent)' : 'var(--text)', lineHeight: 1 }}>
-          {Math.round(Math.abs(remaining))}
+        <div style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 600, color: over && mode === 'remaining' ? 'var(--accent)' : 'var(--text)', lineHeight: 1 }}>
+          {displayValue}
         </div>
         <div style={{ fontSize: 8, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted-light)', marginTop: 3 }}>
           kcal
+        </div>
+        <div style={{ fontSize: 7, color: 'var(--muted-light)', marginTop: 2 }}>
+          {targetCaption}
         </div>
       </div>
     </div>

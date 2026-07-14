@@ -25,14 +25,16 @@ function PlanInner({ profile, userId }: Props) {
     <div className="screen" style={{ background: 'var(--bg)' }}>
       <AppHeader />
 
-      <SegmentedControl
-        options={[
-          { value: 'meal_plan', label: t('tab_meal_plan') },
-          { value: 'diary', label: t('tab_diary') },
-        ]}
-        value={tab}
-        onChange={v => setTab(v as Tab)}
-      />
+      <div style={{ margin: '0 16px 4px' }}>
+        <SegmentedControl
+          options={[
+            { value: 'meal_plan', label: t('tab_meal_plan') },
+            { value: 'diary', label: t('tab_diary') },
+          ]}
+          value={tab}
+          onChange={v => setTab(v as Tab)}
+        />
+      </div>
 
       {tab === 'meal_plan' && <MealPlanPanel profile={profile} />}
       {tab === 'diary' && profile && <DiaryPanel profile={profile} userId={userId} />}

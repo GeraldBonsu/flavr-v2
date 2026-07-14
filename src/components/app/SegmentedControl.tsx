@@ -16,7 +16,6 @@ export default function SegmentedControl({ options, value, onChange }: Props) {
     <div style={{
       display: 'flex', gap: 4, padding: 4,
       background: 'var(--surface2)', borderRadius: 'var(--r-pill)',
-      margin: '0 16px 4px',
     }}>
       {options.map(opt => (
         <button

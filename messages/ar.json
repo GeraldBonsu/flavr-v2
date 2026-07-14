@@ -114,7 +114,12 @@
     "no_target_set": "أعِدّ أهدافك لبدء التتبع",
     "premium_headline": "تتبّع الوجبات والسعرات",
     "premium_body": "سجّل وجباتك، التقط صورًا للحصول على تقديرات فورية، ودع flavr يُكيّف أهدافك تلقائيًا.",
-    "premium_cta": "افتح بميزة Premium →"
+    "premium_cta": "افتح بميزة Premium →",
+    "mode_remaining": "المتبقي",
+    "mode_consumed": "المستهلك",
+    "of_target_kcal": "من {target} سعرة",
+    "edit_meal_title": "تعديل الوجبة",
+    "save_changes": "حفظ التغييرات"
   },
   "account": {
     "your_profile": "ملفك الشخصي",
