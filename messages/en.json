@@ -137,7 +137,17 @@
     "help": "Help & feedback",
     "sign_out": "Sign out",
     "language_title": "Language",
-    "language_subtitle": "App language"
+    "language_subtitle": "App language",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "delete_account": "Delete account",
+    "delete_account_title": "Delete your account?",
+    "delete_account_warning": "This permanently deletes your account and all data — saved recipes, meal logs, weight history, and pantry. This cannot be undone. Any active subscription will be cancelled.",
+    "delete_account_confirm_placeholder": "Type DELETE to confirm",
+    "delete_account_confirm_btn": "Permanently delete my account",
+    "delete_account_cancel": "Cancel",
+    "delete_account_error": "Could not delete account — please try again or contact support",
+    "deleting_account": "Deleting…"
   },
   "languages": {
     "en": "English",
@@ -199,6 +209,7 @@
     "upgrade_btn": "Upgrade to Premium — £2.99/mo →",
     "redirecting": "Redirecting to checkout…",
     "checkout_error": "Could not start checkout — please try again",
+    "portal_error": "Could not open billing portal — please try again",
     "welcome": "Welcome to Premium!",
     "welcome_body": "All features are now unlocked.",
     "manage": "Manage or cancel plan",
@@ -251,7 +262,10 @@
     "have_account": "Have an account?",
     "sign_in_link": "Sign in",
     "forgot": "Forgot password?",
-    "terms": "By continuing you agree to our Terms & Privacy Policy."
+    "terms": "By continuing you agree to our Terms & Privacy Policy.",
+    "terms_prefix": "By continuing you agree to our",
+    "terms_link": "Terms",
+    "privacy_link": "Privacy Policy"
   },
   "cook": {
     "mode_label": "Cook mode · Screen on",

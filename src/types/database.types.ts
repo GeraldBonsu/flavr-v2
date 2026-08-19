@@ -33,6 +33,7 @@ export type Database = {
           dietary_restrictions: string[] | null
           cultural_preferences: string[] | null
           subscription_tier: 'free' | 'premium'
+          stripe_customer_id: string | null
           calorie_display_mode: 'remaining' | 'consumed'
           notification_preferences: Json
           language: string
@@ -64,6 +65,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          stripe_customer_id?: string | null
           calorie_display_mode?: 'remaining' | 'consumed'
           notification_preferences?: Json
           language?: string
@@ -95,6 +97,7 @@ export type Database = {
           dietary_restrictions?: string[] | null
           cultural_preferences?: string[] | null
           subscription_tier?: 'free' | 'premium'
+          stripe_customer_id?: string | null
           calorie_display_mode?: 'remaining' | 'consumed'
           notification_preferences?: Json
           language?: string

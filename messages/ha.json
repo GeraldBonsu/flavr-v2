@@ -133,7 +133,17 @@
     "help": "Taimako & ra'ayi",
     "sign_out": "Fita",
     "language_title": "Harshe",
-    "language_subtitle": "Harshen manhaja"
+    "language_subtitle": "Harshen manhaja",
+    "privacy_policy": "Manufar Sirri",
+    "terms_of_service": "Sharuɗɗan Sabis",
+    "delete_account": "Share asusun",
+    "delete_account_title": "Share asusunku?",
+    "delete_account_warning": "Wannan zai share asusunku da duk bayananku har abada — girke-girke da aka ajiye, rijistar abinci, tarihin nauyi, da kayan ajiya. Ba za a iya soke wannan ba. Duk wani biyan kuɗi mai aiki za a soke shi.",
+    "delete_account_confirm_placeholder": "Rubuta DELETE don tabbatarwa",
+    "delete_account_confirm_btn": "Share asusuna har abada",
+    "delete_account_cancel": "Soke",
+    "delete_account_error": "An kasa share asusun — sake gwadawa ko tuntuɓi tallafi",
+    "deleting_account": "Ana share…"
   },
   "languages": {
     "en": "Turanci",
@@ -195,6 +205,7 @@
     "upgrade_btn": "Ɗaga zuwa Premium — £2.99/wata →",
     "redirecting": "Ana juya zuwa biyan kuɗi…",
     "checkout_error": "An kasa fara biya — sake gwadawa",
+    "portal_error": "An kasa buɗe shafin biyan kuɗi — sake gwadawa",
     "welcome": "Maraba da Premium!",
     "welcome_body": "Dukkan fasalolin an buɗe yanzu.",
     "manage": "Sarrafa ko soke tsari",
@@ -247,7 +258,10 @@
     "have_account": "Kuna da asusu?",
     "sign_in_link": "Shiga",
     "forgot": "Manta kalmar sirri?",
-    "terms": "Ta hanyar ci gaba, kun yarda da Sharuɗɗanmu da Manufar Keɓantaka."
+    "terms": "Ta hanyar ci gaba, kun yarda da Sharuɗɗanmu da Manufar Keɓantaka.",
+    "terms_prefix": "Ta hanyar cigaba, kun yarda da",
+    "terms_link": "Sharuɗɗa",
+    "privacy_link": "Manufar Sirri"
   },
   "cook": {
     "mode_label": "Yanayin dafa · Allon yana aiki",

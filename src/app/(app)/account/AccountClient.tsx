@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
+import DeleteAccountModal from './DeleteAccountModal'
 
 interface Profile {
   name?: string | null
@@ -43,6 +45,7 @@ export default function AccountClient({
   const router = useRouter()
   const t = useTranslations('account')
   const tLang = useTranslations('languages')
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -76,11 +79,13 @@ export default function AccountClient({
   ].filter(Boolean) as string[]
 
   const SETTINGS_ROWS = [
-    { label: t('update_profile'), href: '/onboarding' },
-    { label: t('pantry'),         href: '/pantry' },
-    { label: t('subscription'),   href: '/subscription' },
-    { label: t('notifications'),  href: '/notifications' },
-    { label: t('help'),           href: '/help' },
+    { label: t('update_profile'),    href: '/onboarding' },
+    { label: t('pantry'),            href: '/pantry' },
+    { label: t('subscription'),      href: '/subscription' },
+    { label: t('notifications'),     href: '/notifications' },
+    { label: t('help'),              href: '/help' },
+    { label: t('privacy_policy'),    href: '/privacy' },
+    { label: t('terms_of_service'),  href: '/terms' },
   ]
 
   return (
@@ -249,6 +254,7 @@ export default function AccountClient({
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               width: '100%', padding: '13px 14px',
               background: 'none', border: 'none',
+              borderBottom: '0.5px solid var(--border)',
               fontSize: 12.5, color: 'var(--accent)',
               cursor: 'pointer', fontFamily: 'Epilogue, sans-serif',
               textAlign: 'left',
@@ -257,9 +263,28 @@ export default function AccountClient({
             {t('sign_out')}
             <span style={{ fontSize: 14 }}>›</span>
           </button>
+
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              width: '100%', padding: '13px 14px',
+              background: 'none', border: 'none',
+              fontSize: 12.5, color: 'var(--muted)',
+              cursor: 'pointer', fontFamily: 'Epilogue, sans-serif',
+              textAlign: 'left',
+            }}
+          >
+            {t('delete_account')}
+            <span style={{ fontSize: 14 }}>›</span>
+          </button>
         </div>
 
       </div>
+
+      {showDeleteModal && (
+        <DeleteAccountModal onClose={() => setShowDeleteModal(false)} />
+      )}
 
       <BottomNav />
     </div>

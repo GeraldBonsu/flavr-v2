@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
       const supabase = createServiceClient()
       await supabase
         .from('profiles')
-        .update({ subscription_tier: 'premium' })
+        .update({
+          subscription_tier: 'premium',
+          stripe_customer_id: typeof session.customer === 'string' ? session.customer : null,
+        })
         .eq('id', userId)
     }
   }

@@ -133,7 +133,17 @@
     "help": "Ìrànlọ́wọ́ & ọ̀rọ̀ ìpadàbọ̀",
     "sign_out": "Jáde",
     "language_title": "Èdè",
-    "language_subtitle": "Èdè ètò náà"
+    "language_subtitle": "Èdè ètò náà",
+    "privacy_policy": "Ìlànà Àṣírí",
+    "terms_of_service": "Àwọn Òfin Iṣẹ́",
+    "delete_account": "Paá àkọọ́lẹ̀ rẹ",
+    "delete_account_title": "Paá àkọọ́lẹ̀ rẹ?",
+    "delete_account_warning": "Èyí máa paá àkọọ́lẹ̀ rẹ àti gbogbo dátà rẹ pátápátá — àwọn ohunelo tí a fi pamọ́, ìwé ìrántí oúnjẹ, ìtàn ìwọ̀n, àti páǹtírì. A kò lè yí èyí padà. Ìforúkọsílẹ̀ tí ń ṣiṣẹ́ yóò di fagilé.",
+    "delete_account_confirm_placeholder": "Tẹ DELETE láti fi ẹsẹ̀ múlẹ̀",
+    "delete_account_confirm_btn": "Paá àkọọ́lẹ̀ mi pátápátá",
+    "delete_account_cancel": "Fagilé",
+    "delete_account_error": "A kò lè paá àkọọ́lẹ̀ — gbìyànjú lẹ́ẹ̀kansi tàbí kan sí àtìlẹ́yìn",
+    "deleting_account": "Ń paá…"
   },
   "languages": {
     "en": "Gẹ̀ẹ́sì",
@@ -195,6 +205,7 @@
     "upgrade_btn": "Gòkè sí Premium — £2.99/oṣù →",
     "redirecting": "Ń darí sí ìsanwó…",
     "checkout_error": "A kò lè bẹ̀rẹ̀ ìsanwó — gbìyànjú lẹ́ẹ̀kansi",
+    "portal_error": "A kò lè ṣí ojú ìwé ìsanwó — gbìyànjú lẹ́ẹ̀kansi",
     "welcome": "Káàbọ̀ sí Premium!",
     "welcome_body": "Gbogbo àwọn ẹ̀yà ti ṣí.",
     "manage": "Ṣàkóso tàbí fagilé ètò",
@@ -247,7 +258,10 @@
     "have_account": "Ní àkọọ́lẹ̀?",
     "sign_in_link": "Wọlé",
     "forgot": "Gbàgbé ọ̀rọ̀ aṣínà?",
-    "terms": "Nípa tẹ̀síwájú, o gba àwọn Ìlànà àti Ìmọ̀lẹ̀ Àṣírí wa."
+    "terms": "Nípa tẹ̀síwájú, o gba àwọn Ìlànà àti Ìmọ̀lẹ̀ Àṣírí wa.",
+    "terms_prefix": "Nípa lílọ síwájú, o gbà pẹ̀lú àwọn",
+    "terms_link": "Òfin",
+    "privacy_link": "Ìlànà Àṣírí"
   },
   "cook": {
     "mode_label": "Ipo sísè · Ìmọ́lẹ̀ ṣíṣí",

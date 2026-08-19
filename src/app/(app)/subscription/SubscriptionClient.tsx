@@ -70,6 +70,8 @@ export default function SubscriptionClient({ tier, name }: Props) {
 
   const [checkingOut, setCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState(false)
+  const [openingPortal, setOpeningPortal] = useState(false)
+  const [portalError, setPortalError] = useState(false)
 
   const handleUpgrade = async () => {
     setCheckingOut(true)
@@ -82,6 +84,20 @@ export default function SubscriptionClient({ tier, name }: Props) {
     } catch {
       setCheckoutError(true)
       setCheckingOut(false)
+    }
+  }
+
+  const handleManagePlan = async () => {
+    setOpeningPortal(true)
+    setPortalError(false)
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' })
+      const data = await res.json() as { url?: string }
+      if (!res.ok || !data.url) throw new Error('portal failed')
+      window.location.href = data.url
+    } catch {
+      setPortalError(true)
+      setOpeningPortal(false)
     }
   }
 
@@ -369,17 +385,30 @@ export default function SubscriptionClient({ tier, name }: Props) {
 
         {/* Premium manage plan */}
         {isPremium && (
-          <div style={{
-            background: '#fff', borderRadius: 'var(--r-card)',
-            border: '0.5px solid var(--border)', padding: '14px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
-            <span style={{ fontSize: 12.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
-              {t('manage')}
-            </span>
-            <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
-              {t('coming_soon')}
-            </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <button
+              onClick={() => void handleManagePlan()}
+              disabled={openingPortal}
+              style={{
+                background: '#fff', borderRadius: 'var(--r-card)',
+                border: '0.5px solid var(--border)', padding: '14px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                cursor: openingPortal ? 'not-allowed' : 'pointer', width: '100%',
+                opacity: openingPortal ? 0.6 : 1,
+              }}
+            >
+              <span style={{ fontSize: 12.5, color: 'var(--text)', fontFamily: 'Epilogue, sans-serif' }}>
+                {t('manage')}
+              </span>
+              <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'Epilogue, sans-serif' }}>
+                {openingPortal ? t('redirecting') : '›'}
+              </span>
+            </button>
+            {portalError && (
+              <p style={{ fontSize: 10.5, color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif', textAlign: 'center', margin: 0 }}>
+                {t('portal_error')}
+              </p>
+            )}
           </div>
         )}
 

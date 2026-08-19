@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import TermsNotice from '@/components/app/TermsNotice'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -87,9 +88,7 @@ export default function SignupPage() {
       <h1 style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 500, fontSize: 28, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 6 }}>
         {t('create_account')}
       </h1>
-      <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', marginBottom: 28, fontFamily: 'Epilogue, sans-serif' }}>
-        {t('terms')}
-      </p>
+      <TermsNotice />
 
       {/* Error */}
       {error && (

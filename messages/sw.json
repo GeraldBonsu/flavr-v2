@@ -133,7 +133,17 @@
     "help": "Msaada na maoni",
     "sign_out": "Toka",
     "language_title": "Lugha",
-    "language_subtitle": "Lugha ya programu"
+    "language_subtitle": "Lugha ya programu",
+    "privacy_policy": "Sera ya Faragha",
+    "terms_of_service": "Masharti ya Huduma",
+    "delete_account": "Futa akaunti",
+    "delete_account_title": "Futa akaunti yako?",
+    "delete_account_warning": "Hii itafuta kabisa akaunti yako na data yote — mapishi yaliyohifadhiwa, shajara ya chakula, historia ya uzito, na pantry. Hatua hii haiwezi kutenduliwa. Usajili wowote unaotumika utaghairiwa.",
+    "delete_account_confirm_placeholder": "Andika DELETE kuthibitisha",
+    "delete_account_confirm_btn": "Futa akaunti yangu kabisa",
+    "delete_account_cancel": "Ghairi",
+    "delete_account_error": "Imeshindwa kufuta akaunti — jaribu tena au wasiliana na msaada",
+    "deleting_account": "Inafuta…"
   },
   "languages": {
     "en": "Kiingereza",
@@ -195,6 +205,7 @@
     "upgrade_btn": "Panda kwenda Premium — £2.99/mwezi →",
     "redirecting": "Inaelekeza kwenye malipo…",
     "checkout_error": "Imeshindwa kuanzisha malipo — jaribu tena",
+    "portal_error": "Imeshindwa kufungua ukurasa wa malipo — jaribu tena",
     "welcome": "Karibu kwenye Premium!",
     "welcome_body": "Vipengele vyote vimefunguliwa.",
     "manage": "Simamia au ghairi mpango",
@@ -247,7 +258,10 @@
     "have_account": "Una akaunti tayari?",
     "sign_in_link": "Ingia",
     "forgot": "Umesahau nywila yako?",
-    "terms": "Kwa kuendelea, unakubaliana na Masharti na Sera yetu ya Faragha."
+    "terms": "Kwa kuendelea, unakubaliana na Masharti na Sera yetu ya Faragha.",
+    "terms_prefix": "Kwa kuendelea, unakubali",
+    "terms_link": "Masharti",
+    "privacy_link": "Sera ya Faragha"
   },
   "cook": {
     "mode_label": "Hali ya kupika · Skrini imewashwa",

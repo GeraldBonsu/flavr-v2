@@ -133,7 +133,17 @@
     "help": "Aide & retours",
     "sign_out": "Déconnexion",
     "language_title": "Langue",
-    "language_subtitle": "Langue de l'application"
+    "language_subtitle": "Langue de l'application",
+    "privacy_policy": "Politique de confidentialité",
+    "terms_of_service": "Conditions d'utilisation",
+    "delete_account": "Supprimer le compte",
+    "delete_account_title": "Supprimer votre compte ?",
+    "delete_account_warning": "Ceci supprime définitivement votre compte et toutes vos données — recettes sauvegardées, journal alimentaire, historique de poids et garde-manger. Cette action est irréversible. Tout abonnement actif sera annulé.",
+    "delete_account_confirm_placeholder": "Tapez DELETE pour confirmer",
+    "delete_account_confirm_btn": "Supprimer définitivement mon compte",
+    "delete_account_cancel": "Annuler",
+    "delete_account_error": "Impossible de supprimer le compte — réessayez ou contactez le support",
+    "deleting_account": "Suppression…"
   },
   "languages": {
     "en": "Anglais",
@@ -195,6 +205,7 @@
     "upgrade_btn": "Passer à Premium — £2,99/mois →",
     "redirecting": "Redirection vers le paiement…",
     "checkout_error": "Impossible de démarrer le paiement — réessayez",
+    "portal_error": "Impossible d'ouvrir le portail de facturation — réessayez",
     "welcome": "Bienvenue dans Premium !",
     "welcome_body": "Toutes les fonctionnalités sont débloquées.",
     "manage": "Gérer ou annuler le plan",
@@ -247,7 +258,10 @@
     "have_account": "Déjà un compte ?",
     "sign_in_link": "Se connecter",
     "forgot": "Mot de passe oublié ?",
-    "terms": "En continuant, vous acceptez nos Conditions et notre Politique de confidentialité."
+    "terms": "En continuant, vous acceptez nos Conditions et notre Politique de confidentialité.",
+    "terms_prefix": "En continuant, vous acceptez nos",
+    "terms_link": "Conditions",
+    "privacy_link": "Politique de confidentialité"
   },
   "cook": {
     "mode_label": "Mode cuisine · Écran allumé",

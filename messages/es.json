@@ -133,7 +133,17 @@
     "help": "Ayuda y comentarios",
     "sign_out": "Cerrar sesión",
     "language_title": "Idioma",
-    "language_subtitle": "Idioma de la aplicación"
+    "language_subtitle": "Idioma de la aplicación",
+    "privacy_policy": "Política de privacidad",
+    "terms_of_service": "Términos de servicio",
+    "delete_account": "Eliminar cuenta",
+    "delete_account_title": "¿Eliminar tu cuenta?",
+    "delete_account_warning": "Esto elimina permanentemente tu cuenta y todos tus datos — recetas guardadas, diario de comidas, historial de peso y despensa. Esta acción no se puede deshacer. Cualquier suscripción activa será cancelada.",
+    "delete_account_confirm_placeholder": "Escribe DELETE para confirmar",
+    "delete_account_confirm_btn": "Eliminar mi cuenta permanentemente",
+    "delete_account_cancel": "Cancelar",
+    "delete_account_error": "No se pudo eliminar la cuenta — inténtalo de nuevo o contacta con soporte",
+    "deleting_account": "Eliminando…"
   },
   "languages": {
     "en": "Inglés",
@@ -195,6 +205,7 @@
     "upgrade_btn": "Pasarse a Premium — £2,99/mes →",
     "redirecting": "Redirigiendo al pago…",
     "checkout_error": "No se pudo iniciar el pago — inténtalo de nuevo",
+    "portal_error": "No se pudo abrir el portal de facturación — inténtalo de nuevo",
     "welcome": "¡Bienvenido a Premium!",
     "welcome_body": "Todas las funciones están desbloqueadas.",
     "manage": "Gestionar o cancelar el plan",
@@ -247,7 +258,10 @@
     "have_account": "¿Ya tienes cuenta?",
     "sign_in_link": "Inicia sesión",
     "forgot": "¿Olvidaste tu contraseña?",
-    "terms": "Al continuar, aceptas nuestros Términos y Política de privacidad."
+    "terms": "Al continuar, aceptas nuestros Términos y Política de privacidad.",
+    "terms_prefix": "Al continuar, aceptas nuestros",
+    "terms_link": "Términos",
+    "privacy_link": "Política de privacidad"
   },
   "cook": {
     "mode_label": "Modo cocina · Pantalla encendida",
