@@ -51,7 +51,10 @@
   "generating": {
     "title": "Inaunda mapishi yako…",
     "subtitle": "Subiri wakati mpishi wetu wa AI anafanya kazi.",
-    "need_ingredients": "Unahitaji angalau viungo 2"
+    "need_ingredients": "Unahitaji angalau viungo 2",
+    "error": "Hitilafu imetokea wakati wa kutengeneza mapishi yako — viungo vyako bado vipo, jaribu tena.",
+    "retry": "Jaribu tena",
+    "back_to_cook": "Rudi kwenye Kupika"
   },
   "saved": {
     "title": "Mapishi Yaliyohifadhiwa",
@@ -59,7 +62,9 @@
     "empty_subtitle": "Tengeneza mapishi yako ya kwanza kutoka kwenye kichupo cha Pika.",
     "start_cooking_cta": "Anza kupika →",
     "kcal": "kcal",
-    "protein": "protini"
+    "protein": "protini",
+    "load_error_title": "Imeshindwa kupakia mapishi yako",
+    "load_error_subtitle": "Hitilafu imetokea upande wetu — onyesha upya au jaribu tena hivi karibuni."
   },
   "plan": {
     "title": "Mpango wa chakula",
@@ -166,7 +171,8 @@
     "spices": "Viungo vya ladha",
     "use_it_up": "Tumia sasa",
     "days_old": "{ingredient} ina siku {days}.",
-    "recipe_ideas": "Mawazo ya mapishi →"
+    "recipe_ideas": "Mawazo ya mapishi →",
+    "action_error": "Hitilafu imetokea — jaribu tena"
   },
   "help": {
     "title": "Msaada na maoni",

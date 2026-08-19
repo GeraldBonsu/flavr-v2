@@ -4,9 +4,19 @@ export const dynamic = 'force-dynamic'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import * as Sentry from '@sentry/nextjs'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics/client'
 import { calcTDEE, type ActivityLevel } from '@/lib/nutrition/tdee'
+
+const AGE_RANGE = { min: 13, max: 120 }
+const WEIGHT_KG_RANGE = { min: 20, max: 300 }
+const HEIGHT_CM_RANGE = { min: 100, max: 250 }
+
+function inRange(value: string, range: { min: number; max: number }): boolean {
+  const num = parseFloat(value)
+  return Number.isFinite(num) && num >= range.min && num <= range.max
+}
 
 type Intent = 'eat_better' | 'fitness_goal' | 'explore_culture' | 'casual'
 type FitnessGoal = 'lose_weight' | 'gain_muscle' | 'maintain' | 'recomp'
@@ -25,6 +35,7 @@ export default function OnboardingPage() {
 
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(false)
 
   // Step 1 — intent
   const [intent, setIntent] = useState<Intent | null>(null)
@@ -68,7 +79,10 @@ export default function OnboardingPage() {
   const canProceed = () => {
     if (step === 1) return intent !== null
     if (step === 2) {
-      if (intent === 'fitness_goal') return fitnessGoal !== null && !!age && !!weight && !!height && activity !== null
+      if (intent === 'fitness_goal') {
+        return fitnessGoal !== null && activity !== null
+          && inRange(age, AGE_RANGE) && inRange(weight, WEIGHT_KG_RANGE) && inRange(height, HEIGHT_CM_RANGE)
+      }
       return true
     }
     return true
@@ -84,13 +98,14 @@ export default function OnboardingPage() {
 
     // Step 4: save to Supabase
     setSaving(true)
+    setSaveError(false)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push('/login'); return }
 
     const allDietary = [...dietary, ...(otherDiet.trim() ? [otherDiet.trim()] : [])]
 
-    await supabase.from('profiles').update({
+    const { error } = await supabase.from('profiles').update({
       intent,
       fitness_goal:          intent === 'fitness_goal' ? fitnessGoal : null,
       age:                   intent === 'fitness_goal' && age ? parseInt(age) : null,
@@ -102,6 +117,13 @@ export default function OnboardingPage() {
       cultural_preferences:  culturalPrefs.length > 0 ? culturalPrefs : null,
       onboarding_completed_at: new Date().toISOString(),
     }).eq('id', user.id)
+
+    if (error) {
+      Sentry.captureException(error)
+      setSaving(false)
+      setSaveError(true)
+      return
+    }
 
     void trackEvent('onboarding_completed', { intent })
     router.push('/home')
@@ -180,7 +202,12 @@ export default function OnboardingPage() {
       </div>
 
       <div style={{ padding: '10px 18px 20px', flexShrink: 0 }}>
-        <button className="btn-dark" onClick={handleNext} disabled={!canProceed() || saving}>
+        {saveError && (
+          <p style={{ fontSize: 11, color: 'var(--accent)', textAlign: 'center', marginBottom: 10, fontFamily: 'Epilogue, sans-serif' }}>
+            Could not save your profile — please try again.
+          </p>
+        )}
+        <button className="btn-dark" onClick={() => void handleNext()} disabled={!canProceed() || saving}>
           {step < totalSteps ? 'Continue →' : saving ? 'Saving…' : 'Get cooking →'}
         </button>
       </div>

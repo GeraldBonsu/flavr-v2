@@ -51,7 +51,10 @@
   "generating": {
     "title": "Ń ṣẹ̀dá oúnjẹ rẹ…",
     "subtitle": "Dúró dè bí oríṣun AI wa ṣe ń ṣiṣẹ́.",
-    "need_ingredients": "Nílò ohun èlò 2 kéèyà"
+    "need_ingredients": "Nílò ohun èlò 2 kéèyà",
+    "error": "Àṣìṣe ṣẹlẹ̀ nígbà tí à ń ṣẹ̀dá ohunelo rẹ — àwọn èròjà rẹ ṣì wà níbẹ̀, gbìyànjú lẹ́ẹ̀kansi.",
+    "retry": "Gbìyànjú lẹ́ẹ̀kansi",
+    "back_to_cook": "Padà sí Sise"
   },
   "saved": {
     "title": "Àwọn oúnjẹ tí a fipamọ",
@@ -59,7 +62,9 @@
     "empty_subtitle": "Ṣẹ̀dá oúnjẹ àkọ́kọ́ rẹ láti tab Sísè.",
     "start_cooking_cta": "Bẹ̀rẹ̀ sísè oúnjẹ →",
     "kcal": "kcal",
-    "protein": "amuaradagba"
+    "protein": "amuaradagba",
+    "load_error_title": "A kò lè gbé àwọn ohunelo rẹ wọlé",
+    "load_error_subtitle": "Àṣìṣe ṣẹlẹ̀ ní ọ̀dọ̀ wa — sẹ̀ jí i tàbí gbìyànjú lẹ́ẹ̀kansi láìpẹ́."
   },
   "plan": {
     "title": "Ètò oúnjẹ",
@@ -166,7 +171,8 @@
     "spices": "Àwọn ṣùgbọ́n",
     "use_it_up": "Lo rẹ̀ ní báyìí",
     "days_old": "{ingredient} ti ọjọ́ {days} àgbàdó.",
-    "recipe_ideas": "Àwọn ìmọ̀ràn oúnjẹ →"
+    "recipe_ideas": "Àwọn ìmọ̀ràn oúnjẹ →",
+    "action_error": "Àṣìṣe kan ṣẹlẹ̀ — gbìyànjú lẹ́ẹ̀kansi"
   },
   "help": {
     "title": "Ìrànlọ́wọ́ & ọ̀rọ̀ ìpadàbọ̀",

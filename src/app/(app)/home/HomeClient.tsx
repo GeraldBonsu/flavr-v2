@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import * as Sentry from '@sentry/nextjs'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
@@ -123,6 +124,7 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'analyzeImage', base64, mediaType }),
       })
+      if (!res.ok) throw new Error(`analyzeImage failed: ${res.status}`)
       const found = await res.json() as string[]
       if (!Array.isArray(found) || found.length === 0) {
         showToast(t('no_ingredients_detected'))
@@ -130,7 +132,8 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         found.forEach(ing => addIngredient(ing))
         showToast(t('found_ingredients', { count: found.length, plural: found.length !== 1 ? 's' : '' }))
       }
-    } catch {
+    } catch (err) {
+      Sentry.captureException(err)
       showToast('Could not analyse image — please try again')
     } finally {
       setAnalyzingImage(false)
@@ -147,8 +150,12 @@ function HomeInner({ profile }: { profile: Profile | null }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'lookupRecipeIngredients', recipeName: askQuery.trim() }),
       })
+      if (!res.ok) throw new Error(`lookupRecipeIngredients failed: ${res.status}`)
       const data = await res.json() as RecipeShoppingList
       setAskResult(data)
+    } catch (err) {
+      Sentry.captureException(err)
+      showToast('Could not look up that recipe — please try again')
     } finally {
       setAskLoading(false)
     }

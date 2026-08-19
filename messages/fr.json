@@ -51,7 +51,10 @@
   "generating": {
     "title": "Création de votre recette…",
     "subtitle": "Patientez pendant que notre chef IA fait sa magie.",
-    "need_ingredients": "Il faut au moins 2 ingrédients"
+    "need_ingredients": "Il faut au moins 2 ingrédients",
+    "error": "Une erreur est survenue lors de la génération de votre recette — vos ingrédients sont toujours là, réessayez.",
+    "retry": "Réessayer",
+    "back_to_cook": "Retour à Cuisiner"
   },
   "saved": {
     "title": "Recettes sauvegardées",
@@ -59,7 +62,9 @@
     "empty_subtitle": "Générez votre première recette depuis l'onglet Cuisiner.",
     "start_cooking_cta": "Commencer à cuisiner →",
     "kcal": "kcal",
-    "protein": "protéines"
+    "protein": "protéines",
+    "load_error_title": "Impossible de charger vos recettes",
+    "load_error_subtitle": "Une erreur est survenue de notre côté — actualisez ou réessayez sous peu."
   },
   "plan": {
     "title": "Plan alimentaire",
@@ -166,7 +171,8 @@
     "spices": "Épices",
     "use_it_up": "À utiliser",
     "days_old": "{ingredient} a {days} jours.",
-    "recipe_ideas": "Idées de recettes →"
+    "recipe_ideas": "Idées de recettes →",
+    "action_error": "Un problème est survenu — réessayez"
   },
   "help": {
     "title": "Aide & retours",

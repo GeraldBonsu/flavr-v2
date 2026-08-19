@@ -20,7 +20,7 @@ interface RecipeSummary {
   saved_at: string
 }
 
-export default function SavedClient({ recipes }: { recipes: RecipeSummary[] }) {
+export default function SavedClient({ recipes, loadFailed }: { recipes: RecipeSummary[]; loadFailed?: boolean }) {
   const [activeFilter, setActiveFilter] = useState('All')
   const t = useTranslations('saved')
 
@@ -48,7 +48,15 @@ export default function SavedClient({ recipes }: { recipes: RecipeSummary[] }) {
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        {loadFailed && (
+          <div style={{ textAlign: 'center', padding: '48px 20px' }}>
+            <div style={{ fontSize: 44, marginBottom: 12 }}>⚠️</div>
+            <div className="serif" style={{ fontSize: 18, color: 'var(--text)', marginBottom: 6 }}>{t('load_error_title')}</div>
+            <div style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.6 }}>{t('load_error_subtitle')}</div>
+          </div>
+        )}
+
+        {!loadFailed && filtered.length === 0 && (
           <div style={{ textAlign: 'center', padding: '48px 20px' }}>
             <div style={{ fontSize: 44, marginBottom: 12 }}>📒</div>
             <div className="serif" style={{ fontSize: 18, color: 'var(--text)', marginBottom: 6 }}>{t('empty_title')}</div>

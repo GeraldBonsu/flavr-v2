@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import * as Sentry from '@sentry/nextjs'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { ToastProvider, useToast } from '@/components/app/Toast'
@@ -44,10 +45,12 @@ function LearnInner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'lookupIngredient', ingredient: ingredient.trim() }),
       })
+      if (!res.ok) throw new Error(`lookupIngredient failed: ${res.status}`)
       const data = await res.json() as IngredientInfo
       setResult(data)
       void trackEvent('ingredient_viewed', { ingredient_name: ingredient.trim() })
-    } catch {
+    } catch (err) {
+      Sentry.captureException(err)
       showToast('Could not look up ingredient — try again')
     } finally {
       setLoading(false)

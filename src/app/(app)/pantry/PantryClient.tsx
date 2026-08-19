@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import * as Sentry from '@sentry/nextjs'
 import AppHeader from '@/components/app/AppHeader'
 import BottomNav from '@/components/app/BottomNav'
 import { createClient } from '@/lib/supabase/client'
@@ -52,6 +53,7 @@ export default function PantryClient({ userId, initialItems }: Props) {
   const [addCategory, setAddCategory] = useState<Category>('fridge')
   const [editMode, setEditMode] = useState<Category | null>(null)
   const [scanning, setScanning] = useState(false)
+  const [actionError, setActionError] = useState(false)
 
   const grouped = (['fridge', 'cupboard', 'spices'] as Category[]).map(cat => ({
     cat,
@@ -64,6 +66,7 @@ export default function PantryClient({ userId, initialItems }: Props) {
   async function addItem(name: string, cat: Category) {
     const trimmed = name.trim()
     if (!trimmed || trimmed.length < 2) return
+    setActionError(false)
     const tempId = `temp-${Date.now()}`
     const optimistic: PantryItem = { id: tempId, ingredient: trimmed, category: cat, added_at: new Date().toISOString() }
     setItems(prev => [optimistic, ...prev])
@@ -74,14 +77,21 @@ export default function PantryClient({ userId, initialItems }: Props) {
       .single()
     if (error || !data) {
       setItems(prev => prev.filter(i => i.id !== tempId))
+      setActionError(true)
     } else {
       setItems(prev => prev.map(i => i.id === tempId ? data : i))
     }
   }
 
   async function deleteItem(id: string) {
+    setActionError(false)
+    const removed = items.find(i => i.id === id)
     setItems(prev => prev.filter(i => i.id !== id))
-    await supabase.from('pantry_items').delete().eq('id', id)
+    const { error } = await supabase.from('pantry_items').delete().eq('id', id)
+    if (error && removed) {
+      setItems(prev => [removed, ...prev])
+      setActionError(true)
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -99,6 +109,7 @@ export default function PantryClient({ userId, initialItems }: Props) {
     const file = e.target.files?.[0]
     if (!file) return
     setScanning(true)
+    setActionError(false)
     try {
       const { base64, mediaType } = await resizeImageToBase64(file)
       const res = await fetch('/api/claude', {
@@ -106,14 +117,17 @@ export default function PantryClient({ userId, initialItems }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'analyzeImage', base64, mediaType }),
       })
-      const data = await res.json() as { ingredients?: string[] }
-      if (data.ingredients) {
-        for (const ing of data.ingredients) {
-          await addItem(ing, inferCategory(ing))
-        }
+      if (!res.ok) throw new Error(`analyzeImage failed: ${res.status}`)
+      const ingredients = await res.json() as string[]
+      for (const ing of ingredients) {
+        await addItem(ing, inferCategory(ing))
       }
+    } catch (err) {
+      Sentry.captureException(err)
+      setActionError(true)
     } finally {
       setScanning(false)
+      if (e.target) e.target.value = ''
     }
   }
 
@@ -137,6 +151,12 @@ export default function PantryClient({ userId, initialItems }: Props) {
             {totalCount} item{totalCount !== 1 ? 's' : ''}
           </span>
         </div>
+
+        {actionError && (
+          <div style={{ background: 'var(--warn-bg)', borderRadius: 'var(--r-xs)', padding: '10px 14px', fontSize: 11, color: 'var(--accent)', fontFamily: 'Epilogue, sans-serif' }}>
+            {t('action_error')}
+          </div>
+        )}
 
         {/* Add bar */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

@@ -55,7 +55,10 @@
   "generating": {
     "title": "Creating your recipe…",
     "subtitle": "Hold tight while our AI chef works its magic.",
-    "need_ingredients": "Need at least 2 ingredients"
+    "need_ingredients": "Need at least 2 ingredients",
+    "error": "Something went wrong generating your recipe — your ingredients are still here, try again.",
+    "retry": "Try again",
+    "back_to_cook": "Back to Cook"
   },
   "saved": {
     "title": "Saved recipes",
@@ -63,7 +66,9 @@
     "empty_subtitle": "Generate your first recipe from the Cook tab.",
     "start_cooking_cta": "Start cooking →",
     "kcal": "kcal",
-    "protein": "protein"
+    "protein": "protein",
+    "load_error_title": "Could not load your recipes",
+    "load_error_subtitle": "Something went wrong on our end — pull to refresh or try again shortly."
   },
   "plan": {
     "title": "Meal plan",
@@ -170,7 +175,8 @@
     "spices": "Spices",
     "use_it_up": "Use it up",
     "days_old": "{ingredient} is {days} days old.",
-    "recipe_ideas": "Recipe ideas →"
+    "recipe_ideas": "Recipe ideas →",
+    "action_error": "Something went wrong — please try again"
   },
   "help": {
     "title": "Help & feedback",

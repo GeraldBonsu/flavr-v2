@@ -51,7 +51,10 @@
   "generating": {
     "title": "Creando tu receta…",
     "subtitle": "Espera mientras nuestro chef IA trabaja.",
-    "need_ingredients": "Necesitas al menos 2 ingredientes"
+    "need_ingredients": "Necesitas al menos 2 ingredientes",
+    "error": "Ocurrió un error al generar tu receta — tus ingredientes siguen aquí, inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "back_to_cook": "Volver a Cocinar"
   },
   "saved": {
     "title": "Recetas guardadas",
@@ -59,7 +62,9 @@
     "empty_subtitle": "Genera tu primera receta desde la pestaña Cocinar.",
     "start_cooking_cta": "Empezar a cocinar →",
     "kcal": "kcal",
-    "protein": "proteínas"
+    "protein": "proteínas",
+    "load_error_title": "No se pudieron cargar tus recetas",
+    "load_error_subtitle": "Algo salió mal de nuestro lado — actualiza o inténtalo de nuevo en breve."
   },
   "plan": {
     "title": "Plan de comidas",
@@ -166,7 +171,8 @@
     "spices": "Especias",
     "use_it_up": "Úsalo ya",
     "days_old": "{ingredient} tiene {days} días.",
-    "recipe_ideas": "Ideas de recetas →"
+    "recipe_ideas": "Ideas de recetas →",
+    "action_error": "Algo salió mal — inténtalo de nuevo"
   },
   "help": {
     "title": "Ayuda y comentarios",

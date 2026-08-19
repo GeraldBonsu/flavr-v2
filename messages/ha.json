@@ -51,7 +51,10 @@
   "generating": {
     "title": "Ana ƙirƙirar girkinku…",
     "subtitle": "Jira yayin da mai dafa AI ɗinmu ke aiki.",
-    "need_ingredients": "Kuna buƙatar kayan dafa 2 aƙalla"
+    "need_ingredients": "Kuna buƙatar kayan dafa 2 aƙalla",
+    "error": "Wani abu ya faru ba daidai ba wajen ƙirƙirar girke-girkenku — kayan abincin ku har yanzu suna nan, sake gwadawa.",
+    "retry": "Sake gwadawa",
+    "back_to_cook": "Koma Dafa abinci"
   },
   "saved": {
     "title": "Girke-girke da aka ajiye",
@@ -59,7 +62,9 @@
     "empty_subtitle": "Ƙirƙiri girkin ku na farko daga tab Dafa.",
     "start_cooking_cta": "Fara dafa →",
     "kcal": "kcal",
-    "protein": "furotin"
+    "protein": "furotin",
+    "load_error_title": "An kasa loda girke-girkenku",
+    "load_error_subtitle": "Wani abu ya faru ba daidai ba a ɓangarenmu — sabunta ko sake gwadawa nan ba da jimawa ba."
   },
   "plan": {
     "title": "Tsarin abinci",
@@ -166,7 +171,8 @@
     "spices": "Kayan yaji",
     "use_it_up": "Yi amfani da shi yanzu",
     "days_old": "{ingredient} ya kai kwana {days}.",
-    "recipe_ideas": "Ra'ayoyin girki →"
+    "recipe_ideas": "Ra'ayoyin girki →",
+    "action_error": "Wani abu ya faru ba daidai ba — sake gwadawa"
   },
   "help": {
     "title": "Taimako & ra'ayi",
