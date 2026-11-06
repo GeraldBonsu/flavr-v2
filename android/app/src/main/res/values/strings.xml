@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Flavr</string>
+    <string name="title_activity_main">Flavr</string>
+    <string name="package_name">live.flavr.app</string>
+    <string name="custom_url_scheme">live.flavr.app</string>
+</resources>

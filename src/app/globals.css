@@ -87,6 +87,16 @@ body {
   }
 }
 
+/* ── Native app (Capacitor) — full-bleed, clear the notch / status bar ── */
+html.is-native body { padding: 0; }
+html.is-native .phone-shell {
+  max-width: none;
+  min-height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+  padding-top: env(safe-area-inset-top);
+}
+
 /* ── Typography helpers ── */
 .serif { font-family: 'Fraunces', serif; }
 .mono  { font-family: 'JetBrains Mono', monospace; }

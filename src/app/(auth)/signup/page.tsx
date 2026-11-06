@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import { signInWithOAuth } from '@/lib/native'
 import TermsNotice from '@/components/app/TermsNotice'
 
 export default function SignupPage() {
@@ -52,12 +53,7 @@ export default function SignupPage() {
 
   const handleGoogle = async () => {
     setError(null)
-    const supabase = createClient()
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${appUrl}/auth/callback?next=/onboarding` },
-    })
+    const { error } = await signInWithOAuth('google', '/onboarding')
     if (error) setError(error.message)
   }
 

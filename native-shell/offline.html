@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Flavr — offline</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: #1A3A0A; color: #F4EFE6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+    }
+    h1 { font-family: Georgia, serif; font-size: 40px; letter-spacing: -0.03em; margin: 0 0 12px; }
+    p { line-height: 1.7; opacity: .8; margin: 0 0 28px; }
+    button {
+      font: inherit; font-weight: 600; border: 0; border-radius: 999px; padding: 14px 28px;
+      background: #F4EFE6; color: #1A3A0A; cursor: pointer;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+    }
+    button:hover { opacity: .9; }
+    button:active { transform: scale(.96); }
+    button:focus-visible { outline: 2px solid #F4EFE6; outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>flavr.</h1>
+    <p>You're offline. Check your connection and try again.</p>
+    <button onclick="location.href='https://flavr.live'">Try again</button>
+  </main>
+</body>
+</html>

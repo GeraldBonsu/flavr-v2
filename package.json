@@ -5,10 +5,25 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "cap:sync": "cap sync",
+    "cap:android": "cap sync android && cap open android",
+    "cap:ios": "cap sync ios && cap open ios",
+    "cap:assets": "capacitor-assets generate --iconBackgroundColor #1A3A0A --splashBackgroundColor #1A3A0A"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.93.0",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/browser": "^8.0.5",
+    "@capacitor/camera": "^8.2.6",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.6.0",
+    "@capacitor/push-notifications": "^8.1.3",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@sentry/nextjs": "^10.70.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.3",
@@ -20,6 +35,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.6.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

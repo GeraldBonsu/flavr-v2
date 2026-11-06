@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { getLocale, getMessages } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
+import NativeBridge from '@/components/app/NativeBridge'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
+  viewportFit: 'cover',
   themeColor: '#1A3A0A',
 }
 
@@ -31,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="h-full">
       <body className="min-h-full flex justify-center">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <NativeBridge />
           <div className="phone-shell">
             {children}
           </div>
